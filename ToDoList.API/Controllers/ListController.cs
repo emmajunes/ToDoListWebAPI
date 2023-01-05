@@ -31,10 +31,22 @@ namespace ToDoList.API.Controllers
             return Ok(_listService.CreateList(item));
         }
 
-        [HttpGet]
-        public IEnumerable<ToDoListDto> Get()
+        [HttpGet("GetLists")]
+        public IActionResult GetLists()
         {
-            return (_dbContext.ToDoList.Include(x => x.ListTitle).ToList());
+            return Ok(_listService.GetLists());
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
+        {
+            var item = new ToDoListDto
+            {
+                ListId = id
+            };
+
+            _listService.DeleteList(item);
+            return Ok();
         }
     }
 }

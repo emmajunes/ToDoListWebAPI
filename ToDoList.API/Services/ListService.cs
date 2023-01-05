@@ -32,8 +32,9 @@ namespace ToDoList.API.Services
                 ListDateTime = DateTime.Now.ToString(),
                 ListId = Guid.NewGuid(),
                 ListTitle = item.ListTitle,
+                TitleColor = item.TitleColor,
                 Tasks = new List<TaskDto>(),
-                UserId = Guid.NewGuid()
+                UserId = Guid.NewGuid() //koppla till inloggad person
             };
 
             //json.Add(newList);
@@ -49,14 +50,130 @@ namespace ToDoList.API.Services
             ColorList(newList, color);
             _dbContext.ToDoList.Add(newList);
             _dbContext.SaveChanges();
-            //Console.Clear();
+            
             Console.WriteLine(newList.ListTitle);
             return newList;
         }
+
+        public IEnumerable<ToDoListDto> GetLists()
+        {
+
+            //var loggedinUser = UserManager.LoggedInUser;
+            //var json = FileManagerToDoList.GetJson();
+
+            return _dbContext.ToDoList.ToList();
+
+            //json = json.Where(x => x.UserId == loggedinUser.UserId).ToList();
+
+
+            //Dictionary<string, int> colors = new()
+            //{
+            //    { "Magenta", 13 },
+            //    { "Yellow", 14 },
+            //    { "Blue", 9 },
+            //    { "Red", 12 },
+            //    { "Cyan", 11 },
+            //    { "White", 15 }
+            //};
+
+            //Console.WriteLine("\nOVERVIEW OF LISTS: \n");
+
+            //int index = 1;
+            //foreach (var list in json)
+            //{
+            //    Console.ForegroundColor = (ConsoleColor)colors[list.TitleColor];
+
+            //    Console.WriteLine($"[{index}] {list.ListTitle}");
+            //    index++;
+            //    Console.ForegroundColor = ConsoleColor.White;
+            //}
+        }
+
 
         private void ColorList(ToDoListDto todoList, string color)
         {
             todoList.TitleColor = color;
         }
+
+
+        public void DeleteList(ToDoListDto item)
+        {
+            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.ListId == item.ListId);
+            _dbContext.ToDoList.Remove(selectedList);
+            _dbContext.SaveChanges();
+            //var json = FileManagerToDoList.GetCurrentLoggedInUsersLists();
+
+            //AvailableLists();
+            //ViewAllLists();
+            //int deleteList;
+
+            //try
+            //{
+            //    Console.Write("\nChoose a list to delete: ");
+            //    var deleteIndex = Convert.ToInt32(Console.ReadLine());
+
+            //    if (deleteIndex <= 0 || json.Count < deleteIndex)
+            //    {
+            //        Console.Clear();
+            //        Console.WriteLine("Id does not exist. Try again!");
+            //        DeleteList();
+            //        return;
+            //    }
+
+            //    deleteList = deleteIndex - 1;
+
+            //    Console.WriteLine("Do you want to delete this list y/n? ");
+            //    var deleteAnswer = Console.ReadLine().ToUpper();
+
+            //    if (String.IsNullOrWhiteSpace(deleteAnswer))
+            //    {
+            //        Console.WriteLine("Input field cannot be empty");
+            //        DeleteList();
+            //        return;
+            //    }
+
+            //    if (deleteAnswer == "Y")
+            //    {
+            //        Console.Clear();
+            //        Console.WriteLine($"Deleted list: {json[deleteList].ListTitle}");
+            //        json.RemoveAt(deleteList);
+
+            //        var allLists = FileManagerToDoList.GetJson();
+            //        allLists.RemoveAll(x => x.UserId == UserManager.LoggedInUser.UserId);
+            //        var union = allLists.Union(json).ToList();
+            //        FileManagerToDoList.UpdateJson(union);
+            //        return;
+            //    }
+
+            //    else if (deleteAnswer == "N")
+            //    {
+            //        return;
+            //    }
+
+            //    else
+            //    {
+            //        Console.WriteLine("Answer needs to be a letter of y or n");
+            //        DeleteList();
+            //        return;
+            //    }
+            //}
+
+            //catch (ArgumentOutOfRangeException)
+            //{
+            //    Console.Clear();
+            //    Console.WriteLine("Id does not exist. Try again!");
+            //    DeleteList();
+            //    return;
+            //}
+            //catch (FormatException)
+            //{
+            //    Console.Clear();
+            //    Console.WriteLine("Id must be a number. Try again!");
+            //    DeleteList();
+            //    return;
+            //}
+
+        }
+
     }
 }
