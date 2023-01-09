@@ -22,13 +22,13 @@ namespace ToDoList.API.Controllers
         [HttpPost("CreateList")]
         public IActionResult CreateList(string title, string color)
         {
-            var item = new ToDoListDto
-            {
-                ListTitle = title,
-                TitleColor = color
-            };
+            //var item = new ToDoListDto
+            //{
+            //    ListTitle = title,
+            //    TitleColor = color
+            //};
 
-            return Ok(_listService.CreateList(item));
+            return Ok(_listService.CreateList(title, color));
         }
 
         [HttpGet("GetLists")]
@@ -37,16 +37,28 @@ namespace ToDoList.API.Controllers
             return Ok(_listService.GetLists());
         }
 
-        [HttpDelete("{id}")]
+        [HttpGet("GetList/{id}")]
+        public IActionResult GetIndividualList(Guid id)
+        {
+            return Ok(_listService.GetIndividualList(id));
+        }
+
+        [HttpDelete("DeleteList/{id}")]
         public IActionResult Delete(Guid id)
         {
-            var item = new ToDoListDto
-            {
-                ListId = id
-            };
+            //var item = new ToDoListDto
+            //{
+            //    ListId = id
+            //};
 
-            _listService.DeleteList(item);
+            _listService.DeleteList(id);
             return Ok();
+        }
+
+        [HttpPut("EditList/{id}")]
+        public IActionResult Put(Guid id, string title)
+        {
+            return Ok(_listService.EditList(id, title));
         }
     }
 }

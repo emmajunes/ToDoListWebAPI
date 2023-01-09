@@ -4,9 +4,15 @@ namespace ToDoList.API.Services
 {
     public interface IListService
     {
-        ToDoListDto CreateList(ToDoListDto item);
+        ToDoListDto CreateList(string title, string color);
         IEnumerable<ToDoListDto> GetLists();
 
-        void DeleteList(ToDoListDto item);
+        ToDoListDto GetIndividualList(Guid id);
+
+        void DeleteList(Guid id);
+
+        ToDoListDto EditList(Guid id, string title);
+
+        
     }
 }
