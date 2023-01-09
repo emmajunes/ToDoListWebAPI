@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDoList.API;
 
@@ -10,9 +11,10 @@ using ToDoList.API;
 namespace ToDoList.API.Migrations
 {
     [DbContext(typeof(ToDoListContext))]
-    partial class ToDoListContextModelSnapshot : ModelSnapshot
+    [Migration("20230109132734_TaskChildren")]
+    partial class TaskChildren
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +52,7 @@ namespace ToDoList.API.Migrations
 
                     b.HasIndex("ToDoListDtoId");
 
-                    b.ToTable("Tasks", (string)null);
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("ToDoList.API.Models.ToDoListDto", b =>
@@ -79,7 +81,7 @@ namespace ToDoList.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ToDoList", (string)null);
+                    b.ToTable("ToDoList");
                 });
 
             modelBuilder.Entity("ToDoList.API.Models.UserDto", b =>
@@ -106,7 +108,7 @@ namespace ToDoList.API.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("ToDoList.API.Models.TaskDto", b =>

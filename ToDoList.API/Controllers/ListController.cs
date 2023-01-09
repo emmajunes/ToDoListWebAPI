@@ -11,12 +11,10 @@ namespace ToDoList.API.Controllers
     public class ListController : ControllerBase
     {
         private readonly IListService _listService;
-        private ToDoListContext _dbContext;
 
-        public ListController(IListService listService, ToDoListContext dbContext)
+        public ListController(IListService listService)
         {
             _listService = listService;
-            _dbContext = dbContext;
         }
 
         [HttpPost("CreateList")]

@@ -25,6 +25,7 @@ namespace ToDoList.API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<IListService, ListService>();
+            builder.Services.AddScoped<ITaskService, TaskService>();
 
             var app = builder.Build();
 

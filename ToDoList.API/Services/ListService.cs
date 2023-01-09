@@ -33,7 +33,7 @@ namespace ToDoList.API.Services
                 ListId = Guid.NewGuid(),
                 ListTitle = title,
                 TitleColor = color,
-                Tasks = new List<TaskDto>(),
+                //Tasks = new List<TaskDto>(),
                 UserId = Guid.NewGuid() //koppla till inloggad person
             };
 

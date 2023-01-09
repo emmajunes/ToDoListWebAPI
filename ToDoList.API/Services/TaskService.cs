@@ -1,51 +1,71 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ToDoList.API.Models;
 
 namespace ToDoList.API.Services
 {
-    public class TaskService
+    public class TaskService : ITaskService
     {
+        private readonly ToDoListContext _dbContext;
+        public TaskService(ToDoListContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
-        //public void AddTask(TaskDto taskItem)
-        //{
-        //    var loggedInUser = UserManager.LoggedInUser;
-        //    var json = FileManagerToDoList.GetJson();
+        public ToDoListDto AddTask(Guid listId, string taskTitle, string taskDescription, string taskPrio)
+        {
+            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.ListId == listId);
 
-        //    json = json.Where(x => x.UserId == loggedInUser.UserId).ToList();
-        //    var currentList = json[listId - 1];
+            var newTask = new TaskDto()
+            {
+                ListId = listId,
+                TaskTitle = taskTitle,
+                TaskDescription = taskDescription,
+                TaskPrio = taskPrio,
+                Completed = false
+            };
 
-        //    Console.WriteLine("What task do you want to add?: ");
-        //    var task = Console.ReadLine();
+            _dbContext.Tasks.Add(newTask); 
+            _dbContext.SaveChanges();
 
-        //    Console.WriteLine("What description do you want to add to the task?: ");
-        //    var description = Console.ReadLine();
+            return _dbContext.ToDoList.Include(x => x.Tasks).FirstOrDefault(x => x.ListId == listId);
 
-        //    if (String.IsNullOrWhiteSpace(task) || String.IsNullOrWhiteSpace(description))
-        //    {
-        //        Console.WriteLine("Input field cannot be empty");
-        //        AddTask(listId);
-        //        return;
-        //    }
+            //var loggedInUser = UserManager.LoggedInUser;
+            //var json = FileManagerToDoList.GetJson();
 
-        //    Console.WriteLine("Select a prio 1-5 (optional): ");
-        //    var prio = Console.ReadLine();
+            //json = json.Where(x => x.UserId == loggedInUser.UserId).ToList();
+            //var currentList = json[listId - 1];
 
-        //    if (String.IsNullOrWhiteSpace(prio))
-        //    {
-        //        prio = "none";
-        //    }
+            //Console.WriteLine("What task do you want to add?: ");
+            //var task = Console.ReadLine();
 
-        //    var newTask = new TaskDto()
-        //    {
-        //        TaskTitle = taskItem.TaskTitle,
-        //        TaskDescription = taskItem.TaskDescription,
-        //        TaskPrio = taskItem.TaskPrio
-        //    };
+            //Console.WriteLine("What description do you want to add to the task?: ");
+            //var description = Console.ReadLine();
 
-        //    currentList.Tasks.Add(newTask);
+            //if (String.IsNullOrWhiteSpace(task) || String.IsNullOrWhiteSpace(description))
+            //{
+            //    Console.WriteLine("Input field cannot be empty");
+            //    AddTask(listId);
+            //    return;
+            //}
 
-        //    FileManagerToDoList.UpdateTaskJson(new List<ToDoListDto> { currentList });
+            //Console.WriteLine("Select a prio 1-5 (optional): ");
+            //var prio = Console.ReadLine();
 
-        //}
+            //if (String.IsNullOrWhiteSpace(prio))
+            //{
+            //    prio = "none";
+            //}
+
+
+            //currentList.Tasks.Add(newTask);
+
+
+
+            //FileManagerToDoList.UpdateTaskJson(new List<ToDoListDto> { currentList });
+
+
+
+        }
     }
 }
