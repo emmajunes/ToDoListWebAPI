@@ -11,8 +11,23 @@ namespace ToDoList.API.Services
             _dbContext = dbContext;
         }
 
-        public ToDoListDto CreateList(string title, string color)
+        public ToDoListDto CreateList(string title, string color, Guid userId)
         {
+            var newList = new ToDoListDto()
+            {
+                ListDateTime = DateTime.Now.ToString(),
+                Id = Guid.NewGuid(),
+                ListTitle = title,
+                TitleColor = color,
+                Tasks = new List<TaskDto>(),
+                UserDtoId = userId //koppla till inloggad person
+            };
+
+            _dbContext.ToDoList.Add(newList);
+            _dbContext.SaveChanges();
+
+            return newList;
+
             //var json = FileManagerToDoList.GetJson();
 
             //Console.Write("Enter a title of the new list: ");
@@ -26,17 +41,6 @@ namespace ToDoList.API.Services
             //    //CreateList();
             //    return null;
             //}
-
-            var newList = new ToDoListDto()
-            {
-                ListDateTime = DateTime.Now.ToString(),
-                ListId = Guid.NewGuid(),
-                ListTitle = title,
-                TitleColor = color,
-                //Tasks = new List<TaskDto>(),
-                UserId = Guid.NewGuid() //koppla till inloggad person
-            };
-
             //json.Add(newList);
 
             //FileManagerToDoList.UpdateJson(json);
@@ -48,23 +52,20 @@ namespace ToDoList.API.Services
             //int createdList = userJson.Count;
             //string color = "Red";
             //ColorList(newList, color);
-            _dbContext.ToDoList.Add(newList);
-            _dbContext.SaveChanges();
-            
+
+
             //Console.WriteLine(newList.ListTitle);
-            return newList;
+
         }
 
         public IEnumerable<ToDoListDto> GetLists()
         {
+            return _dbContext.ToDoList.ToList();
 
             //var loggedinUser = UserManager.LoggedInUser;
             //var json = FileManagerToDoList.GetJson();
 
-            return _dbContext.ToDoList.ToList();
-
             //json = json.Where(x => x.UserId == loggedinUser.UserId).ToList();
-
 
             //Dictionary<string, int> colors = new()
             //{
@@ -91,7 +92,7 @@ namespace ToDoList.API.Services
 
         public ToDoListDto GetIndividualList(Guid id)
         {
-            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.ListId == id);
+            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
 
             return selectedList;
         }
@@ -104,7 +105,7 @@ namespace ToDoList.API.Services
 
         public void DeleteList(Guid id)
         {
-            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.ListId == id);
+            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
             _dbContext.ToDoList.Remove(selectedList);
             _dbContext.SaveChanges();
             //var json = FileManagerToDoList.GetCurrentLoggedInUsersLists();
@@ -187,7 +188,7 @@ namespace ToDoList.API.Services
 
             //var currentList = json[listId - 1];
 
-            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.ListId == id);
+            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
 
             selectedList.ListTitle = title;
 

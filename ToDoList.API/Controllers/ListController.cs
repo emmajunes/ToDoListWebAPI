@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ToDoList.API.Models;
@@ -6,6 +7,7 @@ using ToDoList.API.Services;
 
 namespace ToDoList.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ListController : ControllerBase
@@ -18,21 +20,24 @@ namespace ToDoList.API.Controllers
         }
 
         [HttpPost("CreateList")]
-        public IActionResult CreateList(string title, string color)
+        public IActionResult CreateList(string title, string color, Guid userId)
         {
-            //var item = new ToDoListDto
-            //{
-            //    ListTitle = title,
-            //    TitleColor = color
-            //};
-
-            return Ok(_listService.CreateList(title, color));
+            return Ok(_listService.CreateList(title, color, userId));
         }
 
-        [HttpGet("GetLists")]
+        [HttpGet("GetAllLists")]        
         public IActionResult GetLists()
-        {
+        {            
             return Ok(_listService.GetLists());
+        }
+
+        [HttpGet("GetCurrentUserLists")]
+        public IActionResult GetCurrentUserLists()
+        {
+            var identity = HttpContext.User.Identity;
+            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            var lists = _listService.GetLists();
+            return Ok(lists.Where(x => x.UserDtoId == Guid.Parse(userId)));
         }
 
         [HttpGet("GetList/{id}")]
@@ -44,11 +49,6 @@ namespace ToDoList.API.Controllers
         [HttpDelete("DeleteList/{id}")]
         public IActionResult Delete(Guid id)
         {
-            //var item = new ToDoListDto
-            //{
-            //    ListId = id
-            //};
-
             _listService.DeleteList(id);
             return Ok();
         }

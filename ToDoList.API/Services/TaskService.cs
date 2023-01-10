@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using ToDoList.API.Models;
 
 namespace ToDoList.API.Services
@@ -14,58 +15,61 @@ namespace ToDoList.API.Services
 
         public ToDoListDto AddTask(Guid listId, string taskTitle, string taskDescription, string taskPrio)
         {
-            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.ListId == listId);
+            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
 
             var newTask = new TaskDto()
             {
-                ListId = listId,
+                Id = Guid.NewGuid(),
+                ToDoListDtoId = listId,
                 TaskTitle = taskTitle,
                 TaskDescription = taskDescription,
                 TaskPrio = taskPrio,
-                Completed = false
+                Completed = false,
             };
 
-            _dbContext.Tasks.Add(newTask); 
+            _dbContext.Tasks.Add(newTask);
             _dbContext.SaveChanges();
 
-            return _dbContext.ToDoList.Include(x => x.Tasks).FirstOrDefault(x => x.ListId == listId);
+            return _dbContext.ToDoList.Include(x => x.Tasks).FirstOrDefault(x => x.Id == listId);
 
-            //var loggedInUser = UserManager.LoggedInUser;
-            //var json = FileManagerToDoList.GetJson();
+        }
 
-            //json = json.Where(x => x.UserId == loggedInUser.UserId).ToList();
+        public IEnumerable<TaskDto> GetTasks(Guid listId)
+        {
+
+             return _dbContext.Tasks.Where(x => x.ToDoListDtoId == listId).ToList();
+
+        }
+
+        public TaskDto GetIndividualTask(Guid taskId)
+        {
+            return _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
+        }
+
+        public void DeleteTask(Guid taskId)
+        {
+            var selectedTask = _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
+            _dbContext.Tasks.Remove(selectedTask);
+            _dbContext.SaveChanges();
+
+
+        }
+
+        public TaskDto EditTask(Guid taskId, string title, string description, string prio)
+        {
+            //var json = FileManagerToDoList.GetCurrentLoggedInUsersLists();
+
             //var currentList = json[listId - 1];
 
-            //Console.WriteLine("What task do you want to add?: ");
-            //var task = Console.ReadLine();
+            var selectedTask = _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
 
-            //Console.WriteLine("What description do you want to add to the task?: ");
-            //var description = Console.ReadLine();
+            selectedTask.TaskTitle = title;
+            selectedTask.TaskDescription = description;
+            selectedTask.TaskPrio = prio;
 
-            //if (String.IsNullOrWhiteSpace(task) || String.IsNullOrWhiteSpace(description))
-            //{
-            //    Console.WriteLine("Input field cannot be empty");
-            //    AddTask(listId);
-            //    return;
-            //}
+            _dbContext.SaveChanges();
 
-            //Console.WriteLine("Select a prio 1-5 (optional): ");
-            //var prio = Console.ReadLine();
-
-            //if (String.IsNullOrWhiteSpace(prio))
-            //{
-            //    prio = "none";
-            //}
-
-
-            //currentList.Tasks.Add(newTask);
-
-
-
-            //FileManagerToDoList.UpdateTaskJson(new List<ToDoListDto> { currentList });
-
-
-
+            return selectedTask;
         }
     }
 }

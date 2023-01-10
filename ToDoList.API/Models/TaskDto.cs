@@ -8,12 +8,13 @@ namespace ToDoList.API.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        
+        public Guid Id { get; set; }
         public string TaskDescription { get; set; }
         public string TaskPrio { get; set; }
         public string TaskTitle { get; set; }
         public bool Completed { get; set; }
-        public Guid ListId { get; set; }
+
+        [ForeignKey("ToDoListDtoId")]
+        public Guid ToDoListDtoId { get; set; }
     }
 }

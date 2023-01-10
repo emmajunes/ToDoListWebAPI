@@ -14,37 +14,37 @@ namespace ToDoList.API.Controllers
         {
             _taskService= taskService;
         }
-        // GET: api/<TaskController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<TaskController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<TaskController>
+       
         [HttpPost("AddTask")]
         public IActionResult Post(Guid listId, string taskTitle, string taskDescription, string taskPrio)
         {
             return Ok(_taskService.AddTask(listId, taskTitle, taskDescription, taskPrio));
         }
 
-        // PUT api/<TaskController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpGet("GetAllTasks")]
+        public IActionResult GetTasks(Guid listId)
         {
+            return Ok(_taskService.GetTasks(listId));
         }
 
-        // DELETE api/<TaskController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpGet("GetTask")]
+        public IActionResult GetIndividualTask(Guid taskId)
         {
+            return Ok(_taskService.GetIndividualTask(taskId));
         }
+
+        [HttpDelete("DeleteTask")]
+        public IActionResult Delete(Guid taskId)
+        {
+            _taskService.DeleteTask(taskId);
+            return Ok();
+        }
+
+        [HttpPut("EditTask")]
+        public IActionResult Put(Guid taskId, string title, string description, string prio)
+        {
+            return Ok(_taskService.EditTask(taskId, title, description, prio));
+        }
+
     }
 }

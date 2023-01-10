@@ -11,8 +11,8 @@ using ToDoList.API;
 namespace ToDoList.API.Migrations
 {
     [DbContext(typeof(ToDoListContext))]
-    [Migration("20230109132542_Initial")]
-    partial class Initial
+    [Migration("20230110092112_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,15 +23,12 @@ namespace ToDoList.API.Migrations
 
             modelBuilder.Entity("ToDoList.API.Models.TaskDto", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("Completed")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid>("ListId")
-                        .HasColumnType("char(36)");
 
                     b.Property<string>("TaskDescription")
                         .IsRequired()
@@ -45,23 +42,25 @@ namespace ToDoList.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid>("ToDoListDtoId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ToDoListDtoId");
 
                     b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("ToDoList.API.Models.ToDoListDto", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("ListDateTime")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<Guid>("ListId")
-                        .HasColumnType("char(36)");
 
                     b.Property<string>("ListTitle")
                         .IsRequired()
@@ -71,17 +70,19 @@ namespace ToDoList.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("UserDtoId")
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserDtoId");
 
                     b.ToTable("ToDoList");
                 });
 
             modelBuilder.Entity("ToDoList.API.Models.UserDto", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -101,9 +102,37 @@ namespace ToDoList.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("ToDoList.API.Models.TaskDto", b =>
+                {
+                    b.HasOne("ToDoList.API.Models.ToDoListDto", null)
+                        .WithMany("Tasks")
+                        .HasForeignKey("ToDoListDtoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ToDoList.API.Models.ToDoListDto", b =>
+                {
+                    b.HasOne("ToDoList.API.Models.UserDto", null)
+                        .WithMany("ToDoList")
+                        .HasForeignKey("UserDtoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ToDoList.API.Models.ToDoListDto", b =>
+                {
+                    b.Navigation("Tasks");
+                });
+
+            modelBuilder.Entity("ToDoList.API.Models.UserDto", b =>
+                {
+                    b.Navigation("ToDoList");
                 });
 #pragma warning restore 612, 618
         }

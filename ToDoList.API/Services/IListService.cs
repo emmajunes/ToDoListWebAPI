@@ -4,7 +4,7 @@ namespace ToDoList.API.Services
 {
     public interface IListService
     {
-        ToDoListDto CreateList(string title, string color);
+        ToDoListDto CreateList(string title, string color, Guid userId);
         IEnumerable<ToDoListDto> GetLists();
 
         ToDoListDto GetIndividualList(Guid id);
