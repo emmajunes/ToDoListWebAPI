@@ -13,7 +13,7 @@ namespace ToDoList.API.Services
             _dbContext = dbContext;
         }
 
-        public ToDoListDto CreateList(string title, string color, Guid userId)
+        public ToDoListDto CreateList(string title, string color, System.Security.Principal.IIdentity identity, string userId)
         {
             var newList = new ToDoListDto()
             {
@@ -22,7 +22,7 @@ namespace ToDoList.API.Services
                 ListTitle = title,
                 TitleColor = color,
                 Tasks = new List<TaskDto>(),
-                UserDtoId = userId //koppla till inloggad person
+                UserDtoId = Guid.Parse(userId)
             };
 
             _dbContext.ToDoList.Add(newList);
@@ -50,9 +50,15 @@ namespace ToDoList.API.Services
             return lists.Where(x => x.UserDtoId == Guid.Parse(userId));
         }
 
-        private void ColorList(ToDoListDto todoList, string color)
+        public ToDoListDto EditTitleColor(Guid id, string color)
         {
-            todoList.TitleColor = color;
+            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
+
+            selectedList.TitleColor = color;
+
+            _dbContext.SaveChanges();
+
+            return selectedList;
         }
 
         public void DeleteList(Guid id)

@@ -14,5 +14,9 @@ namespace ToDoList.API.Services
 
         void DeleteUser(Guid id);
         Task<UserDto> Authenticate(string username, string password);
+
+        UserDto PromoteUser(Guid id, string access);
+
+        UserDto DemoteUser(Guid id, string access);
     }
 }

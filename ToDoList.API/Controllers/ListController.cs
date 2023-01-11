@@ -20,9 +20,11 @@ namespace ToDoList.API.Controllers
         }
 
         [HttpPost("CreateList")]
-        public IActionResult CreateList(string title, string color, Guid userId)
+        public IActionResult CreateList(string title, string color)
         {
-            return Ok(_listService.CreateList(title, color, userId));
+            var identity = HttpContext.User.Identity;
+            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            return Ok(_listService.CreateList(title, color,identity, userId));
         }
 
         [HttpGet("GetAllLists")]        
@@ -57,6 +59,12 @@ namespace ToDoList.API.Controllers
         public IActionResult Put(Guid id, string title)
         {
             return Ok(_listService.EditList(id, title));
+        }
+
+        [HttpPut("EditTitleColor")]
+        public IActionResult EditTitleColor(Guid id, string title)
+        {
+            return Ok(_listService.EditTitleColor(id, title));
         }
     }
 }

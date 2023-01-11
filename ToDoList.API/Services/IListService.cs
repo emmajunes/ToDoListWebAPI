@@ -4,7 +4,7 @@ namespace ToDoList.API.Services
 {
     public interface IListService
     {
-        ToDoListDto CreateList(string title, string color, Guid userId);
+        ToDoListDto CreateList(string title, string color, System.Security.Principal.IIdentity identity, string userId);
         IEnumerable<ToDoListDto> GetLists();
 
         ToDoListDto GetIndividualList(Guid id);
@@ -15,6 +15,9 @@ namespace ToDoList.API.Services
 
         ToDoListDto EditList(Guid id, string title);
 
-        
+        ToDoListDto EditTitleColor(Guid id, string color);
+
+
+
     }
 }

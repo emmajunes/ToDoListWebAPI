@@ -70,5 +70,43 @@ namespace ToDoList.API.Services
 
         }
 
+        public UserDto PromoteUser(Guid id, string access)
+        {
+            var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == id);
+
+            if(access == "Admin")
+            {
+                selectedUser.Access = "Admin";
+            }
+            if (access == "Moderator")
+            {
+                selectedUser.Access = "Moderator";
+            }
+
+            _dbContext.SaveChanges();
+
+            return selectedUser;
+
+        }
+
+        public UserDto DemoteUser(Guid id, string access)
+        {
+            var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == id);
+
+            if (access == "Moderator")
+            {
+                selectedUser.Access = "Moderator";
+            }
+            if (access == "User")
+            {
+                selectedUser.Access = "User";
+            }
+
+            _dbContext.SaveChanges();
+
+            return selectedUser;
+
+        }
+
     }
 }

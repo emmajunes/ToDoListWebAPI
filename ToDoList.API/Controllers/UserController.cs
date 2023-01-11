@@ -38,9 +38,21 @@ namespace ToDoList.API.Controllers
         }
 
         [HttpPut("EditProfile")]
-        public IActionResult Put(Guid id, string? username, string? email, string? password)
+        public IActionResult EditProfile(Guid id, string? username, string? email, string? password)
         {
             return Ok(_userService.EditProfile(id, username, email, password));
+        }
+
+        [HttpPut("PromoteUser")]
+        public IActionResult PromteUser(Guid userId, string access)
+        {
+            return Ok(_userService.PromoteUser(userId, access));
+        }
+
+        [HttpPut("DemoteUser")]
+        public IActionResult DemoteUser(Guid userId, string access)
+        {
+            return Ok(_userService.DemoteUser(userId, access));
         }
 
         [HttpDelete("DeleteUser")]
