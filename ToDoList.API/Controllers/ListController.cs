@@ -36,24 +36,24 @@ namespace ToDoList.API.Controllers
         {
             var identity = HttpContext.User.Identity;
             var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-            var lists = _listService.GetLists();
-            return Ok(lists.Where(x => x.UserDtoId == Guid.Parse(userId)));
+     
+            return Ok(_listService.GetCurrentUserLists(identity, userId));
         }
 
-        [HttpGet("GetList/{id}")]
+        [HttpGet("GetList")]
         public IActionResult GetIndividualList(Guid id)
         {
             return Ok(_listService.GetIndividualList(id));
         }
 
-        [HttpDelete("DeleteList/{id}")]
+        [HttpDelete("DeleteList")]
         public IActionResult Delete(Guid id)
         {
             _listService.DeleteList(id);
             return Ok();
         }
 
-        [HttpPut("EditList/{id}")]
+        [HttpPut("EditList")]
         public IActionResult Put(Guid id, string title)
         {
             return Ok(_listService.EditList(id, title));

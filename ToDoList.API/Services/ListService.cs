@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using ToDoList.API.Models;
 
 namespace ToDoList.API.Services
@@ -28,66 +30,11 @@ namespace ToDoList.API.Services
 
             return newList;
 
-            //var json = FileManagerToDoList.GetJson();
-
-            //Console.Write("Enter a title of the new list: ");
-            ////var title = (Console.ReadLine());
-
-            //if (String.IsNullOrWhiteSpace(item.ListTitle))
-            //{
-            //    //Console.WriteLine("List title cannot be empty");
-
-            //    throw new ArgumentException("List title cannot be empty");
-            //    //CreateList();
-            //    return null;
-            //}
-            //json.Add(newList);
-
-            //FileManagerToDoList.UpdateJson(json);
-
-            //Console.Clear();
-            //Console.WriteLine("New created list: " + item.ListTitle);
-
-            //var userJson = FileManagerToDoList.GetCurrentLoggedInUsersLists();
-            //int createdList = userJson.Count;
-            //string color = "Red";
-            //ColorList(newList, color);
-
-
-            //Console.WriteLine(newList.ListTitle);
-
         }
 
         public IEnumerable<ToDoListDto> GetLists()
         {
             return _dbContext.ToDoList.ToList();
-
-            //var loggedinUser = UserManager.LoggedInUser;
-            //var json = FileManagerToDoList.GetJson();
-
-            //json = json.Where(x => x.UserId == loggedinUser.UserId).ToList();
-
-            //Dictionary<string, int> colors = new()
-            //{
-            //    { "Magenta", 13 },
-            //    { "Yellow", 14 },
-            //    { "Blue", 9 },
-            //    { "Red", 12 },
-            //    { "Cyan", 11 },
-            //    { "White", 15 }
-            //};
-
-            //Console.WriteLine("\nOVERVIEW OF LISTS: \n");
-
-            //int index = 1;
-            //foreach (var list in json)
-            //{
-            //    Console.ForegroundColor = (ConsoleColor)colors[list.TitleColor];
-
-            //    Console.WriteLine($"[{index}] {list.ListTitle}");
-            //    index++;
-            //    Console.ForegroundColor = ConsoleColor.White;
-            //}
         }
 
         public ToDoListDto GetIndividualList(Guid id)
@@ -97,6 +44,11 @@ namespace ToDoList.API.Services
             return selectedList;
         }
 
+        public IEnumerable<ToDoListDto> GetCurrentUserLists(System.Security.Principal.IIdentity identity, string userId)
+        {       
+            var lists = GetLists();
+            return lists.Where(x => x.UserDtoId == Guid.Parse(userId));
+        }
 
         private void ColorList(ToDoListDto todoList, string color)
         {
@@ -108,85 +60,11 @@ namespace ToDoList.API.Services
             var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
             _dbContext.ToDoList.Remove(selectedList);
             _dbContext.SaveChanges();
-            //var json = FileManagerToDoList.GetCurrentLoggedInUsersLists();
-
-            //AvailableLists();
-            //ViewAllLists();
-            //int deleteList;
-
-            //try
-            //{
-            //    Console.Write("\nChoose a list to delete: ");
-            //    var deleteIndex = Convert.ToInt32(Console.ReadLine());
-
-            //    if (deleteIndex <= 0 || json.Count < deleteIndex)
-            //    {
-            //        Console.Clear();
-            //        Console.WriteLine("Id does not exist. Try again!");
-            //        DeleteList();
-            //        return;
-            //    }
-
-            //    deleteList = deleteIndex - 1;
-
-            //    Console.WriteLine("Do you want to delete this list y/n? ");
-            //    var deleteAnswer = Console.ReadLine().ToUpper();
-
-            //    if (String.IsNullOrWhiteSpace(deleteAnswer))
-            //    {
-            //        Console.WriteLine("Input field cannot be empty");
-            //        DeleteList();
-            //        return;
-            //    }
-
-            //    if (deleteAnswer == "Y")
-            //    {
-            //        Console.Clear();
-            //        Console.WriteLine($"Deleted list: {json[deleteList].ListTitle}");
-            //        json.RemoveAt(deleteList);
-
-            //        var allLists = FileManagerToDoList.GetJson();
-            //        allLists.RemoveAll(x => x.UserId == UserManager.LoggedInUser.UserId);
-            //        var union = allLists.Union(json).ToList();
-            //        FileManagerToDoList.UpdateJson(union);
-            //        return;
-            //    }
-
-            //    else if (deleteAnswer == "N")
-            //    {
-            //        return;
-            //    }
-
-            //    else
-            //    {
-            //        Console.WriteLine("Answer needs to be a letter of y or n");
-            //        DeleteList();
-            //        return;
-            //    }
-            //}
-
-            //catch (ArgumentOutOfRangeException)
-            //{
-            //    Console.Clear();
-            //    Console.WriteLine("Id does not exist. Try again!");
-            //    DeleteList();
-            //    return;
-            //}
-            //catch (FormatException)
-            //{
-            //    Console.Clear();
-            //    Console.WriteLine("Id must be a number. Try again!");
-            //    DeleteList();
-            //    return;
-            //}
 
         }
 
         public ToDoListDto EditList(Guid id, string title)
         {
-            //var json = FileManagerToDoList.GetCurrentLoggedInUsersLists();
-
-            //var currentList = json[listId - 1];
 
             var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
 
@@ -196,26 +74,6 @@ namespace ToDoList.API.Services
 
             return selectedList;
 
-            //Console.WriteLine("Write a new title to the list: ");
-            //var title = Console.ReadLine();
-
-            //if (String.IsNullOrWhiteSpace(title))
-            //{
-            //    Console.WriteLine("List title cannot be empty");
-            //    //EditList(listId);
-            //    //return;
-            //}
-
-            //currentList.ListTitle = title;
-
-
-
-            //var allLists = FileManagerToDoList.GetJson();
-            //allLists.RemoveAll(x => x.UserId == UserManager.LoggedInUser.UserId);
-            //var union = allLists.Union(json).ToList();
-            //FileManagerToDoList.UpdateJson(union);
-
-            //FileManagerToDoList.UpdateJson(json);
         }
 
     }

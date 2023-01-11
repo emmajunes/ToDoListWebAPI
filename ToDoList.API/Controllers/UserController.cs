@@ -6,6 +6,7 @@ using ToDoList.API.Services;
 
 namespace ToDoList.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -16,8 +17,9 @@ namespace ToDoList.API.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("CreateUser")]
-        public IActionResult CreateList(string username, string email, string password)
+        public IActionResult CreateUser(string username, string email, string password)
         {
             return Ok(_userService.CreateUser(username, email, password));
         }
@@ -28,19 +30,20 @@ namespace ToDoList.API.Controllers
             return Ok(_userService.GetUsers());
         }
 
-        [HttpGet("GetUser/{id}")]
+        
+        [HttpGet("GetUser")]
         public IActionResult GetIndividualList(Guid id)
         {
             return Ok(_userService.GetIndividualUser(id));
         }
 
-        [HttpPut("EditProfile/{id}")]
+        [HttpPut("EditProfile")]
         public IActionResult Put(Guid id, string? username, string? email, string? password)
         {
             return Ok(_userService.EditProfile(id, username, email, password));
         }
 
-        [HttpDelete("DeleteUser/{id}")]
+        [HttpDelete("DeleteUser")]
         public IActionResult Delete(Guid id)
         {
             _userService.DeleteUser(id);

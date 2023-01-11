@@ -9,6 +9,8 @@ namespace ToDoList.API.Services
 
         ToDoListDto GetIndividualList(Guid id);
 
+        IEnumerable<ToDoListDto> GetCurrentUserLists(System.Security.Principal.IIdentity identity, string userId);
+
         void DeleteList(Guid id);
 
         ToDoListDto EditList(Guid id, string title);

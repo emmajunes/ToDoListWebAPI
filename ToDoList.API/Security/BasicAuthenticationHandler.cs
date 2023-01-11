@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
+using Microsoft.Net.Http.Headers;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
@@ -26,6 +27,14 @@ namespace ToDoList.API.Security
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            var path = Request.Path.ToString();
+
+            if(path == $"/api/User/CreateUser")
+            {
+                return AuthenticateResult.NoResult();
+            }
+                
+
             string userName;
             Guid userId;
             try
@@ -45,7 +54,7 @@ namespace ToDoList.API.Security
 
                 userId = user.Id;
             }
-            catch (UnauthorizedAccessException uae)
+            catch (Exception)
             {
                 return AuthenticateResult.Fail("Invalid credentials!!!!!");
             }
