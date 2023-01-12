@@ -29,23 +29,29 @@ namespace ToDoList.API.Controllers
             return Ok(_taskService.GetTasks(listId));
         }
 
-        [HttpGet("GetTask")]
-        public IActionResult GetIndividualTask(Guid taskId)
+        [HttpGet("GetSingleTask")]
+        public IActionResult GetSingleTask(Guid taskId)
         {
-            return Ok(_taskService.GetIndividualTask(taskId));
+            return Ok(_taskService.GetSingleTask(taskId));
         }
 
         [HttpDelete("DeleteTask")]
-        public IActionResult Delete(Guid taskId)
+        public IActionResult Delete()
         {
-            _taskService.DeleteTask(taskId);
+            _taskService.DeleteTask();
             return Ok();
         }
 
         [HttpPut("EditTask")]
-        public IActionResult Put(Guid taskId, string title, string description, string prio)
+        public IActionResult Put(string? title, string? description, string? prio)
         {
-            return Ok(_taskService.EditTask(taskId, title, description, prio));
+            return Ok(_taskService.EditTask(title, description, prio));
+        }
+
+        [HttpPut("ToggleTask")]
+        public IActionResult ToggleTask(bool completed)
+        {
+            return Ok(_taskService.ToggleTask(completed));
         }
 
     }

@@ -17,7 +17,5 @@ namespace ToDoList.API.Services
 
         ToDoListDto EditTitleColor(string color);
 
-
-
     }
 }

@@ -36,40 +36,46 @@ namespace ToDoList.API.Services
 
         public IEnumerable<TaskDto> GetTasks(Guid listId)
         {
-
              return _dbContext.Tasks.Where(x => x.ToDoListDtoId == listId).ToList();
-
         }
 
-        public TaskDto GetIndividualTask(Guid taskId)
+        public TaskDto GetSingleTask(Guid taskId)
         {
+            CurrentRecord.Id["TaskId"] = taskId.ToString();
+
             return _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
         }
 
-        public void DeleteTask(Guid taskId)
+        public void DeleteTask()
         {
+            var taskId = Guid.Parse(CurrentRecord.Id["TaskId"]);
             var selectedTask = _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
             _dbContext.Tasks.Remove(selectedTask);
             _dbContext.SaveChanges();
-
-
         }
 
-        public TaskDto EditTask(Guid taskId, string title, string description, string prio)
+        public TaskDto EditTask(string? title, string? description, string? prio)
         {
-            //var json = FileManagerToDoList.GetCurrentLoggedInUsersLists();
-
-            //var currentList = json[listId - 1];
-
+            var taskId = Guid.Parse(CurrentRecord.Id["TaskId"]);
             var selectedTask = _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
 
-            selectedTask.TaskTitle = title;
-            selectedTask.TaskDescription = description;
-            selectedTask.TaskPrio = prio;
+            selectedTask.TaskTitle = title == null ? selectedTask.TaskTitle : title;
+            selectedTask.TaskDescription = description == null ? selectedTask.TaskDescription : description;
+            selectedTask.TaskPrio = prio == null ? selectedTask.TaskPrio : prio;
 
             _dbContext.SaveChanges();
-
             return selectedTask;
         }
+
+        public TaskDto ToggleTask(bool completed)
+        {
+            var taskId = Guid.Parse(CurrentRecord.Id["TaskId"]);
+            var selectedTask = _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
+            selectedTask.Completed =! selectedTask.Completed;
+
+            _dbContext.SaveChanges();
+            return selectedTask;
+        }
+
     }
 }

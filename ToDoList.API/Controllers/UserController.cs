@@ -56,7 +56,7 @@ namespace ToDoList.API.Controllers
         }
 
         [HttpDelete("DeleteUser")]
-        public IActionResult Delete(Guid? id)
+        public IActionResult DeleteUser(Guid? id)
         {
             if(id == null)
             {
