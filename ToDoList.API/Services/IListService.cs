@@ -17,5 +17,7 @@ namespace ToDoList.API.Services
 
         ToDoListDto EditTitleColor(string color);
 
+        IEnumerable<ToDoListDto> SortLists(SortList sortAlternative, string userId);
+
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ToDoList.API.Models
 {
-    
+
     public class TaskDto
     {
         [Key]

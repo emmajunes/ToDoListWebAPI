@@ -11,7 +11,7 @@ using ToDoList.API;
 namespace ToDoList.API.Migrations
 {
     [DbContext(typeof(ToDoListContext))]
-    [Migration("20230110092112_InitialCreate")]
+    [Migration("20230112122250_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -86,9 +86,8 @@ namespace ToDoList.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("Access")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("Access")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()

@@ -10,7 +10,7 @@ namespace ToDoList.API.Models
         public string Username { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string Access { get; set; }
+        public Access Access { get; set; }
 
         public ICollection<ToDoListDto> ToDoList { get; set; }
 

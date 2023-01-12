@@ -23,8 +23,7 @@ namespace ToDoList.API.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Password = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Access = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    Access = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

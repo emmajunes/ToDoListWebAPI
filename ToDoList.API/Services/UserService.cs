@@ -20,7 +20,7 @@ namespace ToDoList.API.Services
                 Username = username,
                 Email = email,
                 Password = password,
-                Access = "User",
+                Access = Access.User,
                 Id = Guid.NewGuid(),
             };
             _dbContext.User.Add(newUser);
@@ -69,42 +69,38 @@ namespace ToDoList.API.Services
             _dbContext.SaveChanges();
         }
 
-        public UserDto PromoteUser(Guid id, string access)
+        public UserDto PromoteUser(Guid id, Access access)
         {
             var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == id);
 
-            if(access == "Admin")
+            if(access == Access.Admin)
             {
-                selectedUser.Access = "Admin";
+                selectedUser.Access = Access.Admin;
             }
-            if (access == "Moderator")
+            if (access == Access.Moderator)
             {
-                selectedUser.Access = "Moderator";
+                selectedUser.Access = Access.Moderator;
             }
 
             _dbContext.SaveChanges();
-
             return selectedUser;
-
         }
 
-        public UserDto DemoteUser(Guid id, string access)
+        public UserDto DemoteUser(Guid id, Access access)
         {
             var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == id);
 
-            if (access == "Moderator")
+            if (access == Access.Moderator)
             {
-                selectedUser.Access = "Moderator";
+                selectedUser.Access = Access.Moderator;
             }
-            if (access == "User")
+            if (access == Access.User)
             {
-                selectedUser.Access = "User";
+                selectedUser.Access = Access.User;
             }
 
             _dbContext.SaveChanges();
-
             return selectedUser;
-
         }
 
     }

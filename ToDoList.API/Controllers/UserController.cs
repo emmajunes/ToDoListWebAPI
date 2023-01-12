@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ToDoList.API.Models;
 using ToDoList.API.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -44,13 +45,13 @@ namespace ToDoList.API.Controllers
         }
 
         [HttpPut("PromoteUser")]
-        public IActionResult PromteUser(Guid userId, string access)
+        public IActionResult PromteUser(Guid userId, Access access)
         {
             return Ok(_userService.PromoteUser(userId, access));
         }
 
         [HttpPut("DemoteUser")]
-        public IActionResult DemoteUser(Guid userId, string access)
+        public IActionResult DemoteUser(Guid userId, Access access)
         {
             return Ok(_userService.DemoteUser(userId, access));
         }

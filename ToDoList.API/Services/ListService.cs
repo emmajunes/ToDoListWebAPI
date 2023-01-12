@@ -91,5 +91,31 @@ namespace ToDoList.API.Services
 
         }
 
+        public IEnumerable<ToDoListDto> SortLists(SortList sortAlternative, string userId)
+        {
+            var lists = _dbContext.ToDoList.ToList();
+            var currentUserLists = lists.Where(x => x.UserDtoId == Guid.Parse(userId));
+
+            switch (sortAlternative)
+            {
+                case SortList.Ascendning:
+                    currentUserLists = currentUserLists.OrderBy(x => x.ListDateTime).ToList();
+                    break;
+                case SortList.Descending:
+                    currentUserLists = currentUserLists.OrderByDescending(x => x.ListDateTime).ToList();
+                    break;
+                case SortList.Alphabetic:
+                    currentUserLists = currentUserLists.OrderBy(x => x.ListTitle).ToList();
+                    break;
+                case SortList.Color:
+                    currentUserLists = currentUserLists.OrderBy(x => x.TitleColor).ToList();
+                    break;
+            }
+
+            _dbContext.SaveChanges();
+
+            return currentUserLists;
+        }
+
     }
 }

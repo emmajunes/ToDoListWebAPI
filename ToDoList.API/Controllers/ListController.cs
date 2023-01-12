@@ -66,5 +66,13 @@ namespace ToDoList.API.Controllers
         {
             return Ok(_listService.EditTitleColor(title));
         }
+
+        [HttpPut("SortList")]
+        public IActionResult SortLists(SortList sortAlternative)
+        {
+            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+
+            return Ok(_listService.SortLists(sortAlternative, userId));
+        }
     }
 }

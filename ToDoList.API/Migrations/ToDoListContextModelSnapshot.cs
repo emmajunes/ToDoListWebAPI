@@ -84,9 +84,8 @@ namespace ToDoList.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("Access")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("Access")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
