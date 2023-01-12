@@ -13,9 +13,9 @@ namespace ToDoList.API.Services
             _dbContext = dbContext;
         }
 
-        public ToDoListDto AddTask(Guid listId, string taskTitle, string taskDescription, string taskPrio)
+        public ToDoListDto AddTask(string taskTitle, string taskDescription, string taskPrio)
         {
-            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
+            var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
 
             var newTask = new TaskDto()
             {

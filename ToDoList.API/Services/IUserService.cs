@@ -12,7 +12,7 @@ namespace ToDoList.API.Services
 
         IEnumerable<UserDto> GetUsers();
 
-        void DeleteUser(Guid id);
+        void DeleteUser(Guid? id);
         Task<UserDto> Authenticate(string username, string password);
 
         UserDto PromoteUser(Guid id, string access);

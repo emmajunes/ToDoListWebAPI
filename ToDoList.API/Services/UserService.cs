@@ -62,12 +62,11 @@ namespace ToDoList.API.Services
 
             return selectedUser;
         }
-        public void DeleteUser(Guid id)
+        public void DeleteUser(Guid? id)
         {
             var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == id);
             _dbContext.User.Remove(selectedUser);
             _dbContext.SaveChanges();
-
         }
 
         public UserDto PromoteUser(Guid id, string access)

@@ -39,6 +39,8 @@ namespace ToDoList.API.Services
 
         public ToDoListDto GetIndividualList(Guid id)
         {
+            CurrentRecord.Id["ListId"] = id.ToString();
+
             var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
 
             return selectedList;
@@ -50,9 +52,10 @@ namespace ToDoList.API.Services
             return lists.Where(x => x.UserDtoId == Guid.Parse(userId));
         }
 
-        public ToDoListDto EditTitleColor(Guid id, string color)
+        public ToDoListDto EditTitleColor(string color)
         {
-            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
+            var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
+            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
 
             selectedList.TitleColor = color;
 
@@ -61,18 +64,24 @@ namespace ToDoList.API.Services
             return selectedList;
         }
 
-        public void DeleteList(Guid id)
+        public void DeleteList(Guid? id)
         {
+            if(id == null)
+            {
+                id = Guid.Parse(CurrentRecord.Id["ListId"]);
+            }
+
             var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
             _dbContext.ToDoList.Remove(selectedList);
             _dbContext.SaveChanges();
 
         }
 
-        public ToDoListDto EditList(Guid id, string title)
+        public ToDoListDto EditList(string title)
         {
+            var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
 
-            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
+            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
 
             selectedList.ListTitle = title;
 

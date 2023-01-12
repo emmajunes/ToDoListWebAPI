@@ -4,7 +4,7 @@ namespace ToDoList.API.Services
 {
     public interface ITaskService
     {
-        ToDoListDto AddTask(Guid listId, string taskTitle, string taskDescription, string taskPrio);
+        ToDoListDto AddTask(string taskTitle, string taskDescription, string taskPrio);
         IEnumerable<TaskDto> GetTasks(Guid listId);
 
         TaskDto GetIndividualTask(Guid taskId);

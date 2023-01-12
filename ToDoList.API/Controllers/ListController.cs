@@ -49,22 +49,22 @@ namespace ToDoList.API.Controllers
         }
 
         [HttpDelete("DeleteList")]
-        public IActionResult Delete(Guid id)
+        public IActionResult Delete(Guid? id)
         {
             _listService.DeleteList(id);
             return Ok();
         }
 
         [HttpPut("EditList")]
-        public IActionResult Put(Guid id, string title)
+        public IActionResult Put(string title)
         {
-            return Ok(_listService.EditList(id, title));
+            return Ok(_listService.EditList(title));
         }
 
         [HttpPut("EditTitleColor")]
-        public IActionResult EditTitleColor(Guid id, string title)
+        public IActionResult EditTitleColor(string title)
         {
-            return Ok(_listService.EditTitleColor(id, title));
+            return Ok(_listService.EditTitleColor(title));
         }
     }
 }

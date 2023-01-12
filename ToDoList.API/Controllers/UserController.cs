@@ -56,8 +56,13 @@ namespace ToDoList.API.Controllers
         }
 
         [HttpDelete("DeleteUser")]
-        public IActionResult Delete(Guid id)
+        public IActionResult Delete(Guid? id)
         {
+            if(id == null)
+            {
+                id = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            }
+            
             _userService.DeleteUser(id);
             return Ok();
         }

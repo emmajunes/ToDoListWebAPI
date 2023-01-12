@@ -18,9 +18,9 @@ namespace ToDoList.API.Controllers
         }
        
         [HttpPost("AddTask")]
-        public IActionResult Post(Guid listId, string taskTitle, string taskDescription, string taskPrio)
+        public IActionResult Post(string taskTitle, string taskDescription, string taskPrio)
         {
-            return Ok(_taskService.AddTask(listId, taskTitle, taskDescription, taskPrio));
+            return Ok(_taskService.AddTask(taskTitle, taskDescription, taskPrio));
         }
 
         [HttpGet("GetAllTasks")]

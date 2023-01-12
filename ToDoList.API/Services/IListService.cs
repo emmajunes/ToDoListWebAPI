@@ -11,11 +11,11 @@ namespace ToDoList.API.Services
 
         IEnumerable<ToDoListDto> GetCurrentUserLists(System.Security.Principal.IIdentity identity, string userId);
 
-        void DeleteList(Guid id);
+        void DeleteList(Guid? id);
 
-        ToDoListDto EditList(Guid id, string title);
+        ToDoListDto EditList(string title);
 
-        ToDoListDto EditTitleColor(Guid id, string color);
+        ToDoListDto EditTitleColor(string color);
 
 
 
