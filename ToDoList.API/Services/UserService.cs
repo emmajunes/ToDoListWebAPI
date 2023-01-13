@@ -12,16 +12,19 @@ namespace ToDoList.API.Services
             _dbContext = dbContext;
         }
 
-        public UserDto CreateUser(string username, string email, string password)
+        public UserDto CreateUser(string username, string email, string password, Access? access)
         {
+            if(access == null)
+            {
+                access = Access.User;
+            }
 
             var newUser = new UserDto()
             {
                 Username = username,
                 Email = email,
                 Password = password,
-                Access = Access.User,
-                Id = Guid.NewGuid(),
+                Access = (Access)access,
             };
             _dbContext.User.Add(newUser);
             _dbContext.SaveChanges();

@@ -3,11 +3,9 @@
 namespace ToDoList.API
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum SortList
+    public enum SortTask
     {
-        Ascendning = 0,
-        Descending = 1,
-        Alphabetic = 2,
-        Color = 3,
+        Priority = 0,
+        Completed = 1
     }
 }

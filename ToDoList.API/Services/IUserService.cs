@@ -4,7 +4,7 @@ namespace ToDoList.API.Services
 {
     public interface IUserService
     {
-        UserDto CreateUser(string username, string email, string password);
+        UserDto CreateUser(string username, string email, string password, Access? access);
 
         UserDto GetIndividualUser(Guid id);
 

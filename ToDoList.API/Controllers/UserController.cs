@@ -20,9 +20,9 @@ namespace ToDoList.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("CreateUser")]
-        public IActionResult CreateUser(string username, string email, string password)
+        public IActionResult CreateUser(string username, string email, string password, Access? access)
         {
-            return Ok(_userService.CreateUser(username, email, password));
+            return Ok(_userService.CreateUser(username, email, password, access));
         }
 
         [HttpGet("GetAllUsers")]

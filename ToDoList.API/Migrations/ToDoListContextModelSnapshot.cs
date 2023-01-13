@@ -32,9 +32,8 @@ namespace ToDoList.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("TaskPrio")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("TaskPrio")
+                        .HasColumnType("int");
 
                     b.Property<string>("TaskTitle")
                         .IsRequired()
@@ -64,9 +63,11 @@ namespace ToDoList.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("TitleColor")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("Sortby")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TitleColor")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UserDtoId")
                         .HasColumnType("char(36)");
@@ -94,6 +95,9 @@ namespace ToDoList.API.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int>("SortBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("Username")
                         .IsRequired()

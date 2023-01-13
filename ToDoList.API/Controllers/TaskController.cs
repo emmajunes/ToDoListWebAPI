@@ -18,7 +18,7 @@ namespace ToDoList.API.Controllers
         }
        
         [HttpPost("AddTask")]
-        public IActionResult Post(string taskTitle, string taskDescription, string taskPrio)
+        public IActionResult Post(string taskTitle, string taskDescription, Priority taskPrio)
         {
             return Ok(_taskService.AddTask(taskTitle, taskDescription, taskPrio));
         }
@@ -43,7 +43,7 @@ namespace ToDoList.API.Controllers
         }
 
         [HttpPut("EditTask")]
-        public IActionResult Put(string? title, string? description, string? prio)
+        public IActionResult Put(string? title, string? description, Priority? prio)
         {
             return Ok(_taskService.EditTask(title, description, prio));
         }
@@ -52,6 +52,16 @@ namespace ToDoList.API.Controllers
         public IActionResult ToggleTask(bool completed)
         {
             return Ok(_taskService.ToggleTask(completed));
+        }
+
+        [HttpPut("SortTasks")]
+        public IActionResult SortTasks(SortTask sortAlternative)
+        {
+
+            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            _taskService.ChangeSortTypeForTask(sortAlternative);
+
+            return Ok(_taskService.SortTasks(sortAlternative));
         }
 
     }

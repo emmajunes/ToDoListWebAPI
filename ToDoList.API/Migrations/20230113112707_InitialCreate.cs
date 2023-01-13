@@ -23,7 +23,8 @@ namespace ToDoList.API.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Password = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Access = table.Column<int>(type: "int", nullable: false)
+                    Access = table.Column<int>(type: "int", nullable: false),
+                    SortBy = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,8 +41,8 @@ namespace ToDoList.API.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ListTitle = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TitleColor = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TitleColor = table.Column<int>(type: "int", nullable: false),
+                    Sortby = table.Column<int>(type: "int", nullable: false),
                     UserDtoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
@@ -61,11 +62,10 @@ namespace ToDoList.API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    TaskDescription = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TaskPrio = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TaskPrio = table.Column<int>(type: "int", nullable: false),
                     TaskTitle = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TaskDescription = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Completed = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     ToDoListDtoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")

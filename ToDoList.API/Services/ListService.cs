@@ -13,7 +13,7 @@ namespace ToDoList.API.Services
             _dbContext = dbContext;
         }
 
-        public ToDoListDto CreateList(string title, string color, System.Security.Principal.IIdentity identity, string userId)
+        public ToDoListDto CreateList(string title, Color color, System.Security.Principal.IIdentity identity, string userId)
         {
             var newList = new ToDoListDto()
             {
@@ -48,11 +48,15 @@ namespace ToDoList.API.Services
 
         public IEnumerable<ToDoListDto> GetCurrentUserLists(System.Security.Principal.IIdentity identity, string userId)
         {       
-            var lists = GetLists();
-            return lists.Where(x => x.UserDtoId == Guid.Parse(userId));
+            //var lists = GetLists();
+            //var currentUserLists = lists.Where(x => x.UserDtoId == Guid.Parse(userId));
+            var currentUser = _dbContext.User.FirstOrDefault(x => x.Id == Guid.Parse(userId));
+            var sortedList = SortLists(currentUser.SortBy, userId);
+
+            return sortedList;
         }
 
-        public ToDoListDto EditTitleColor(string color)
+        public ToDoListDto EditTitleColor(Color color)
         {
             var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
             var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
@@ -91,6 +95,13 @@ namespace ToDoList.API.Services
 
         }
 
+        public void ChangeSortType(SortList sortAlternative, string userId)
+        {
+            var currentUser = _dbContext.User.FirstOrDefault(x => x.Id == Guid.Parse(userId));
+            currentUser.SortBy = sortAlternative;
+            _dbContext.SaveChanges();
+        }
+
         public IEnumerable<ToDoListDto> SortLists(SortList sortAlternative, string userId)
         {
             var lists = _dbContext.ToDoList.ToList();
@@ -111,8 +122,6 @@ namespace ToDoList.API.Services
                     currentUserLists = currentUserLists.OrderBy(x => x.TitleColor).ToList();
                     break;
             }
-
-            _dbContext.SaveChanges();
 
             return currentUserLists;
         }

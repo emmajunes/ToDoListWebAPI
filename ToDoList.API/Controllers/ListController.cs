@@ -20,7 +20,7 @@ namespace ToDoList.API.Controllers
         }
 
         [HttpPost("CreateList")]
-        public IActionResult CreateList(string title, string color)
+        public IActionResult CreateList(string title, Color color)
         {
             var identity = HttpContext.User.Identity;
             var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
@@ -62,15 +62,17 @@ namespace ToDoList.API.Controllers
         }
 
         [HttpPut("EditTitleColor")]
-        public IActionResult EditTitleColor(string title)
+        public IActionResult EditTitleColor(Color color)
         {
-            return Ok(_listService.EditTitleColor(title));
+            return Ok(_listService.EditTitleColor(color));
         }
 
         [HttpPut("SortList")]
         public IActionResult SortLists(SortList sortAlternative)
         {
+
             var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            _listService.ChangeSortType(sortAlternative, userId);
 
             return Ok(_listService.SortLists(sortAlternative, userId));
         }
