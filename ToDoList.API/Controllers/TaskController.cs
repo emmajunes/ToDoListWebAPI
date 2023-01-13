@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ToDoList.API.Models;
 using ToDoList.API.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -24,9 +25,9 @@ namespace ToDoList.API.Controllers
         }
 
         [HttpGet("GetAllTasks")]
-        public IActionResult GetTasks(Guid listId)
+        public IActionResult GetTasks()
         {
-            return Ok(_taskService.GetTasks(listId));
+            return Ok(_taskService.GetTasks());
         }
 
         [HttpGet("GetSingleTask")]

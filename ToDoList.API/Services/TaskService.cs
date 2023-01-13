@@ -34,9 +34,9 @@ namespace ToDoList.API.Services
 
         }
 
-        public IEnumerable<TaskDto> GetTasks(Guid listId)
+        public IEnumerable<TaskDto> GetTasks()
         {
-            //_dbContext.Tasks.Where(x => x.ToDoListDtoId == listId).ToList();
+            var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
             var currentList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
             var sortedTasks = SortTasks(currentList.Sortby);
 
@@ -46,7 +46,6 @@ namespace ToDoList.API.Services
         public TaskDto GetSingleTask(Guid taskId)
         {
             CurrentRecord.Id["TaskId"] = taskId.ToString();
-
             return _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
         }
 

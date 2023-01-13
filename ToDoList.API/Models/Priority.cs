@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ToDoList.API
+namespace ToDoList.API.Models
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Priority

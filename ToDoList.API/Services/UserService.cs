@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Mail;
 using ToDoList.API.Models;
 
 namespace ToDoList.API.Services
@@ -11,6 +13,11 @@ namespace ToDoList.API.Services
         {
             _dbContext = dbContext;
         }
+
+        //skapa errorhantering
+        //validering epost, password
+        //identity?
+        //vad ska admin ha tillgång till osv?
 
         public UserDto CreateUser(string username, string email, string password, Access? access)
         {
@@ -26,9 +33,9 @@ namespace ToDoList.API.Services
                 Password = password,
                 Access = (Access)access,
             };
+
             _dbContext.User.Add(newUser);
             _dbContext.SaveChanges();
-
             return newUser;
 
         }
@@ -105,6 +112,70 @@ namespace ToDoList.API.Services
             _dbContext.SaveChanges();
             return selectedUser;
         }
+
+        public bool ValidateEmail(string email)
+        {
+            if (String.IsNullOrWhiteSpace(email))
+            {
+                return false;
+            }
+            //foreach (var user in Users)
+            //{
+            //    if (user.Email == email)
+            //    {
+            //        Console.WriteLine("\nEmail already exists!");
+            //        return false;
+            //    }
+            //}
+
+            try
+            {
+                MailAddress m = new MailAddress(email);
+
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
+
+        //public bool ValidatePassword(string password)
+        //{
+        //    int validConditions = 0;
+        //    foreach (char c in password)
+        //    {
+        //        if (c >= 'a' && c <= 'z')
+        //        {
+        //            validConditions++;
+        //            break;
+        //        }
+        //    }
+        //    foreach (char c in password)
+        //    {
+        //        if (c >= 'A' && c <= 'Z')
+        //        {
+        //            validConditions++;
+        //            break;
+        //        }
+        //    }
+        //    if (validConditions == 0) return false;
+        //    foreach (char c in password)
+        //    {
+        //        if (c >= '0' && c <= '9')
+        //        {
+        //            validConditions++;
+        //            break;
+        //        }
+        //    }
+        //    if (validConditions == 1) return false;
+        //    if (validConditions == 2)
+        //    {
+        //        char[] special = { '@', '#', '$', '%', '^', '&', '+', '=', '!', '/', '?', '*', '-', '[', ']', '"', '(', ')', '{', '}', '~', '¤', '´' };
+        //        if (password.IndexOfAny(special) == -1) return false;
+        //    }
+        //    return true;
+        //}
 
     }
 }
