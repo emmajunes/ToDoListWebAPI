@@ -4,19 +4,21 @@ namespace ToDoList.API.Services
 {
     public interface ITaskService
     {
-        ToDoListDto AddTask(string taskTitle, string taskDescription, Priority taskPrio);
+        //ToDoListDto AddTask(string taskTitle, string taskDescription, Priority taskPrio);
+
+        ToDoListDto AddTask(TaskDto task);
         IEnumerable<TaskDto> GetTasks();
 
         TaskDto GetSingleTask(Guid taskId);
 
-        void DeleteTask();
+        TaskDto DeleteTask();
 
-        TaskDto EditTask(string? title, string? description, Priority? prio);
+        TaskDto EditTask(TaskDto task);
 
-        TaskDto ToggleTask(bool completed);
+        TaskDto ToggleTask(TaskDto task);
 
-        void ChangeSortTypeForTask(SortTask sortAlternative);
+        void ChangeSortTypeForTask(ToDoListDto list);
 
-        IEnumerable<TaskDto> SortTasks(SortTask sortAlternative);
+        IEnumerable<TaskDto> SortTasks(ToDoListDto list);
     }
 }

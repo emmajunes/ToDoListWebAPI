@@ -4,22 +4,25 @@ namespace ToDoList.API.Services
 {
     public interface IListService
     {
-        ToDoListDto CreateList(string title, Color color, System.Security.Principal.IIdentity identity, string userId);
+        //ToDoListDto CreateList(string title, Color color, System.Security.Principal.IIdentity identity, string userId);
+
+        ToDoListDto CreateList(ToDoListDto toDoList, Guid userId);
         IEnumerable<ToDoListDto> GetLists();
 
-        ToDoListDto GetIndividualList(Guid id);
+        ToDoListDto GetSingleList(Guid id);
 
-        IEnumerable<ToDoListDto> GetCurrentUserLists(System.Security.Principal.IIdentity identity, string userId);
+        //IEnumerable<ToDoListDto> GetCurrentUserLists(System.Security.Principal.IIdentity identity, string userId);
 
-        void DeleteList(Guid? id);
+        IEnumerable<ToDoListDto> GetCurrentUserLists(Guid userId);
 
-        ToDoListDto EditList(string title);
+        //void DeleteList(Guid? id);
 
-        ToDoListDto EditTitleColor(Color color);
+        ToDoListDto DeleteList();
+        ToDoListDto EditList(ToDoListDto list);
 
-        IEnumerable<ToDoListDto> SortLists(SortList sortAlternative, string userId);
+        ToDoListDto EditTitleColor(ToDoListDto list);
 
-        void ChangeSortType(SortList sortAlternative, string userId);
+        IEnumerable<ToDoListDto> SortLists(UserDto user);
 
     }
 }

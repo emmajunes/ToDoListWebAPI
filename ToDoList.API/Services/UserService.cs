@@ -19,19 +19,46 @@ namespace ToDoList.API.Services
         //identity?
         //vad ska admin ha tillgång till osv?
 
-        public UserDto CreateUser(string username, string email, string password, Access? access)
+        //public UserDto CreateUser(string username, string email, string password, Access? access)
+        //{
+        //    if(access == null)
+        //    {
+        //        access = Access.User;
+        //    }
+
+        //    var newUser = new UserDto()
+        //    {
+        //        Username = username,
+        //        Email = email,
+        //        Password = password,
+        //        Access = (Access)access,
+        //    };
+
+        //    _dbContext.User.Add(newUser);
+        //    _dbContext.SaveChanges();
+        //    return newUser;
+
+        //}
+
+        public UserDto CreateUser(UserDto user)
         {
-            if(access == null)
+            //if (access == null)
+            //{
+            //    access = Access.User;
+            //}
+         
+            if(_dbContext.User.Any(x => x.Username == user.Username))
             {
-                access = Access.User;
+                throw new Exception();
             }
 
             var newUser = new UserDto()
             {
-                Username = username,
-                Email = email,
-                Password = password,
-                Access = (Access)access,
+                Username = user.Username,
+                Email = user.Email,
+                Password = user.Password,
+                Id = Guid.NewGuid(),
+                Access = user.Access,
             };
 
             _dbContext.User.Add(newUser);
@@ -40,11 +67,37 @@ namespace ToDoList.API.Services
 
         }
 
-        public async Task<UserDto> Authenticate(string username, string password)
+        public UserDto Login(UserDto user)
         {
-            var user = _dbContext.User.SingleOrDefault(x => x.Username == username && x.Password == password);
+            if(user.Username == null || user.Password == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var checkUser = Authenticate(user.Username, user.Password);
+
+            if(checkUser == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            CurrentRecord.Id["UserId"] = checkUser.Id.ToString();
 
             return user;
+        }
+        public UserDto Authenticate(string username, string password)
+        {
+            UserDto user;
+            try
+            {
+                user = _dbContext.User.Single(x => x.Username == username && x.Password == password);
+                return user;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
 
         public IEnumerable<UserDto> GetUsers()
@@ -53,61 +106,64 @@ namespace ToDoList.API.Services
 
         }
 
-        public UserDto GetIndividualUser(Guid id)
+        public UserDto GetSingleUser(Guid id)
         {
             var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == id);
 
             return selectedUser;
         }
 
-        public UserDto EditProfile(Guid id, string? username, string? email, string? password)
+        public void ChangeSortType(UserDto user)
+        {
+            var currentUser = _dbContext.User.FirstOrDefault(x => x.Id == user.Id);
+            currentUser.SortBy = user.SortBy;
+            _dbContext.SaveChanges();
+        }
+
+        public UserDto EditProfile(Guid id, UserDto user)
         {
             var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == id);
 
-            selectedUser.Username = username == null ? selectedUser.Username : username;
-            selectedUser.Email = email == null ? selectedUser.Email : email;
-            selectedUser.Password = password == null ? selectedUser.Password : password;
+            selectedUser.Username = user.Username == null ? selectedUser.Username : user.Username;
+            selectedUser.Email = user.Email == null ? selectedUser.Email : user.Email;
+            selectedUser.Password = user.Password == null ? selectedUser.Password : user.Password;
 
             _dbContext.SaveChanges();
 
             return selectedUser;
         }
-        public void DeleteUser(Guid? id)
+        public UserDto DeleteUser(Guid? id)
         {
             var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == id);
             _dbContext.User.Remove(selectedUser);
             _dbContext.SaveChanges();
+
+            return selectedUser;
         }
 
-        public UserDto PromoteUser(Guid id, Access access)
+        public UserDto PromoteUser(UserDto user)
         {
-            var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == id);
+            var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == user.Id);
 
-            if(access == Access.Admin)
+            if(selectedUser.Access == Access.Admin)
             {
-                selectedUser.Access = Access.Admin;
+                throw new Exception();
             }
-            if (access == Access.Moderator)
-            {
-                selectedUser.Access = Access.Moderator;
-            }
-
+            selectedUser.Access +=1;
+            
             _dbContext.SaveChanges();
             return selectedUser;
         }
 
-        public UserDto DemoteUser(Guid id, Access access)
+        public UserDto DemoteUser(UserDto user)
         {
-            var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == id);
+            var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == user.Id);
 
-            if (access == Access.Moderator)
+            if (selectedUser.Access == Access.User)
             {
-                selectedUser.Access = Access.Moderator;
+                throw new Exception();
             }
-            if (access == Access.User)
-            {
-                selectedUser.Access = Access.User;
-            }
+            selectedUser.Access -= 1;
 
             _dbContext.SaveChanges();
             return selectedUser;

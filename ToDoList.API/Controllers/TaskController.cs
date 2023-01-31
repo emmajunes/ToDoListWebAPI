@@ -17,52 +17,113 @@ namespace ToDoList.API.Controllers
         {
             _taskService= taskService;
         }
-       
+
         [HttpPost("AddTask")]
-        public IActionResult Post(string taskTitle, string taskDescription, Priority taskPrio)
+        public IActionResult AddTask()
         {
-            return Ok(_taskService.AddTask(taskTitle, taskDescription, taskPrio));
+            try
+            {
+                var task = Request.ReadFromJsonAsync<TaskDto>().Result;
+                return Ok(_taskService.AddTask(task));
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+            
         }
 
         [HttpGet("GetAllTasks")]
         public IActionResult GetTasks()
         {
-            return Ok(_taskService.GetTasks());
+            try
+            {
+                return Ok(_taskService.GetTasks());
+
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
         }
 
-        [HttpGet("GetSingleTask")]
-        public IActionResult GetSingleTask(Guid taskId)
+        [HttpPut("GetSingleTask")]
+        public IActionResult GetSingleTask()
         {
-            return Ok(_taskService.GetSingleTask(taskId));
+            try
+            {
+                Guid taskId = Request.ReadFromJsonAsync<Guid>().Result;
+                return Ok(_taskService.GetSingleTask(taskId));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete("DeleteTask")]
-        public IActionResult Delete()
+        public IActionResult DeleteTask()
         {
-            _taskService.DeleteTask();
-            return Ok();
+            try
+            {
+                return Ok(_taskService.DeleteTask());
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }        
         }
 
         [HttpPut("EditTask")]
-        public IActionResult Put(string? title, string? description, Priority? prio)
+        public IActionResult EditTask()
         {
-            return Ok(_taskService.EditTask(title, description, prio));
+            try
+            {
+                var task = Request.ReadFromJsonAsync<TaskDto>().Result;
+                return Ok(_taskService.EditTask(task));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPut("ToggleTask")]
-        public IActionResult ToggleTask(bool completed)
+        public IActionResult ToggleTask()
         {
-            return Ok(_taskService.ToggleTask(completed));
+            try
+            {
+                var task = Request.ReadFromJsonAsync<TaskDto>().Result;
+                return Ok(_taskService.ToggleTask(task));
+
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }     
         }
 
         [HttpPut("SortTasks")]
-        public IActionResult SortTasks(SortTask sortAlternative)
+        public IActionResult SortTasks()
         {
+            try
+            {
+                //var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-            _taskService.ChangeSortTypeForTask(sortAlternative);
+                var list = Request.ReadFromJsonAsync<ToDoListDto>().Result;
+                _taskService.ChangeSortTypeForTask(list);
 
-            return Ok(_taskService.SortTasks(sortAlternative));
+                return Ok(_taskService.SortTasks(list));
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+           
         }
 
     }

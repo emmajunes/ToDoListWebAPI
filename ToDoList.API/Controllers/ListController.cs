@@ -13,68 +13,163 @@ namespace ToDoList.API.Controllers
     public class ListController : ControllerBase
     {
         private readonly IListService _listService;
+        private readonly IUserService _userService;
 
-        public ListController(IListService listService)
+        public ListController(IListService listService, IUserService userService)
         {
             _listService = listService;
+            _userService = userService;
         }
 
+        //[HttpPost("CreateList")]
+        //public IActionResult CreateList(string title, Color color)
+        //{
+        //    var identity = HttpContext.User.Identity;
+        //    var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+        //    return Ok(_listService.CreateList(title, color,identity, userId));
+        //}
+
         [HttpPost("CreateList")]
-        public IActionResult CreateList(string title, Color color)
+        public IActionResult CreateList()
         {
-            var identity = HttpContext.User.Identity;
-            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-            return Ok(_listService.CreateList(title, color,identity, userId));
+            try
+            {
+                var list = Request.ReadFromJsonAsync<ToDoListDto>().Result;
+                Guid userId = Guid.Parse(CurrentRecord.Id["UserId"]);
+                return Ok(_listService.CreateList(list, userId));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("GetAllLists")]        
         public IActionResult GetLists()
-        {            
-            return Ok(_listService.GetLists());
+        {
+            try
+            {
+                return Ok(_listService.GetLists());
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+            
         }
 
+        //[HttpGet("GetCurrentUserLists")]
+        //public IActionResult GetCurrentUserLists()
+        //{
+        //    var identity = HttpContext.User.Identity;
+        //    var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+     
+        //    return Ok(_listService.GetCurrentUserLists(identity, userId));
+        //}
         [HttpGet("GetCurrentUserLists")]
         public IActionResult GetCurrentUserLists()
         {
-            var identity = HttpContext.User.Identity;
-            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-     
-            return Ok(_listService.GetCurrentUserLists(identity, userId));
+            //var identity = HttpContext.User.Identity;
+            //var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            try
+            {
+                Guid userId = Guid.Parse(CurrentRecord.Id["UserId"]);
+                //var user = Request.ReadFromJsonAsync<UserDto>().Result;
+                return Ok(_listService.GetCurrentUserLists(userId));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
-        [HttpGet("GetList")]
-        public IActionResult GetIndividualList(Guid id)
+        [HttpPut("GetSingleList")]
+        public IActionResult GetSingleList()
         {
-            return Ok(_listService.GetIndividualList(id));
+            try
+            {
+                Guid listId = Request.ReadFromJsonAsync<Guid>().Result;
+                return Ok(_listService.GetSingleList(listId));
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+            
         }
+
+        //[HttpDelete("DeleteList")]
+        //public IActionResult Delete(Guid? id)
+        //{
+        //    _listService.DeleteList(id);
+        //    return Ok();
+        //}
 
         [HttpDelete("DeleteList")]
-        public IActionResult Delete(Guid? id)
+        public IActionResult Delete()
         {
-            _listService.DeleteList(id);
-            return Ok();
+            try
+            {
+                return Ok(_listService.DeleteList());
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+            
         }
 
         [HttpPut("EditList")]
-        public IActionResult Put(string title)
+        public IActionResult EditList()
         {
-            return Ok(_listService.EditList(title));
+            try
+            {
+                var list = Request.ReadFromJsonAsync<ToDoListDto>().Result;
+                return Ok(_listService.EditList(list));
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+            
         }
 
         [HttpPut("EditTitleColor")]
-        public IActionResult EditTitleColor(Color color)
+        public IActionResult EditTitleColor()
         {
-            return Ok(_listService.EditTitleColor(color));
+            try
+            {
+                var list = Request.ReadFromJsonAsync<ToDoListDto>().Result;
+                return Ok(_listService.EditTitleColor(list));
+
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
         }
 
         [HttpPut("SortList")]
-        public IActionResult SortLists(SortList sortAlternative)
+        public IActionResult SortLists()
         {
+            try
+            {
+                var user = Request.ReadFromJsonAsync<UserDto>().Result;
+                //var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+                _userService.ChangeSortType(user);
 
-            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-            _listService.ChangeSortType(sortAlternative, userId);
-
-            return Ok(_listService.SortLists(sortAlternative, userId));
+                return Ok(_listService.SortLists(user));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            
         }
     }
 }

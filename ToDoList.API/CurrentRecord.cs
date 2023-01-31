@@ -5,7 +5,8 @@
         public static Dictionary<string, string> Id = new()
         {
             { "ListId", "" },
-            { "TaskId", "" }
+            { "TaskId", "" },
+            {"UserId", "" }
         };
                        
     }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ToDoList.API.Models;
 
@@ -13,7 +15,7 @@ namespace ToDoList.API.Services
             _dbContext = dbContext;
         }
 
-        public ToDoListDto AddTask(string taskTitle, string taskDescription, Priority taskPrio)
+        public ToDoListDto AddTask(TaskDto taskItem)
         {
             var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
 
@@ -21,9 +23,9 @@ namespace ToDoList.API.Services
             {
                 Id = Guid.NewGuid(),
                 ToDoListDtoId = listId,
-                TaskTitle = taskTitle,
-                TaskDescription = taskDescription,
-                TaskPrio = taskPrio,
+                TaskTitle = taskItem.TaskTitle,
+                TaskDescription = taskItem.TaskDescription,
+                TaskPrio = taskItem.TaskPrio,
                 Completed = false,
             };
 
@@ -33,12 +35,11 @@ namespace ToDoList.API.Services
             return _dbContext.ToDoList.Include(x => x.Tasks).FirstOrDefault(x => x.Id == listId);
 
         }
-
         public IEnumerable<TaskDto> GetTasks()
         {
             var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
             var currentList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
-            var sortedTasks = SortTasks(currentList.Sortby);
+            var sortedTasks = SortTasks(currentList);
 
             return sortedTasks;
         }
@@ -49,53 +50,54 @@ namespace ToDoList.API.Services
             return _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
         }
 
-        public void DeleteTask()
+        public TaskDto DeleteTask()
         {
             var taskId = Guid.Parse(CurrentRecord.Id["TaskId"]);
             var selectedTask = _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
             _dbContext.Tasks.Remove(selectedTask);
             _dbContext.SaveChanges();
+
+            return selectedTask;
         }
 
-        public TaskDto EditTask(string? title, string? description, Priority? prio)
+        public TaskDto EditTask(TaskDto task)
         {
             var taskId = Guid.Parse(CurrentRecord.Id["TaskId"]);
             var selectedTask = _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
 
-            selectedTask.TaskTitle = title ?? selectedTask.TaskTitle;
-            selectedTask.TaskDescription = description ?? selectedTask.TaskDescription;
-            selectedTask.TaskPrio = prio ?? selectedTask.TaskPrio;
+            selectedTask.TaskTitle = task.TaskTitle == null ? selectedTask.TaskTitle : task.TaskTitle;
+            selectedTask.TaskDescription = task.TaskDescription == null ? selectedTask.TaskDescription : task.TaskDescription;
+            selectedTask.TaskPrio = task.TaskPrio;
 
             _dbContext.SaveChanges();
             return selectedTask;
         }
 
-        public TaskDto ToggleTask(bool completed)
+        public TaskDto ToggleTask(TaskDto task)
         {
-            var taskId = Guid.Parse(CurrentRecord.Id["TaskId"]);
-            var selectedTask = _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
+            //var taskId = Guid.Parse(CurrentRecord.Id["TaskId"]);
+            var selectedTask = _dbContext.Tasks.FirstOrDefault(x => x.Id == task.Id);
             selectedTask.Completed =! selectedTask.Completed;
 
             _dbContext.SaveChanges();
             return selectedTask;
         }
 
-        public void ChangeSortTypeForTask(SortTask sortAlternative)
+        public void ChangeSortTypeForTask(ToDoListDto list)
         {
             var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
 
             var currentList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
-            currentList.Sortby = sortAlternative;
+            currentList.Sortby = list.Sortby;
             _dbContext.SaveChanges();
         }
 
-        public IEnumerable<TaskDto> SortTasks(SortTask sortAlternative)
+        public IEnumerable<TaskDto> SortTasks(ToDoListDto list)
         {
             var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
-
             var currentTasks = _dbContext.Tasks.Where(x => x.ToDoListDtoId == listId).ToList();
 
-            switch (sortAlternative)
+            switch (list.Sortby)
             {
                 case SortTask.Priority:
                     currentTasks = currentTasks.OrderByDescending(x => x.TaskPrio).ToList();
@@ -107,6 +109,5 @@ namespace ToDoList.API.Services
 
             return currentTasks;
         }
-
     }
 }

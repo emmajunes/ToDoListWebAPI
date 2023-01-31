@@ -19,53 +19,147 @@ namespace ToDoList.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("CreateUser")]
-        public IActionResult CreateUser(string username, string email, string password, Access? access)
+        [HttpPost("Login")]
+        public IActionResult Login()
         {
-            return Ok(_userService.CreateUser(username, email, password, access));
+            var user = Request.ReadFromJsonAsync<UserDto>().Result;
+
+            try
+            {
+                return Ok(_userService.Login(user));
+            }
+            catch (Exception e) when (e.InnerException is InvalidOperationException)
+            {
+                return BadRequest("Username and Password is required");
+            }
+            catch (Exception e) when (e.InnerException is UnauthorizedAccessException)
+            {
+                return BadRequest("Invalid login");
+            }
+            catch (Exception)
+            {
+                return BadRequest("Something went wrong with creating the token");
+            }
+        }    
+
+        [AllowAnonymous]
+        [HttpPost("CreateUser")]
+        public IActionResult CreateUser()
+        {
+            try
+            {
+                var user = Request.ReadFromJsonAsync<UserDto>().Result;
+                return Ok(_userService.CreateUser(user));
+            }
+            catch (Exception)
+            {
+                return BadRequest("User already exists!");
+            }        
         }
 
         [HttpGet("GetAllUsers")]
-        public IActionResult GetLists()
+        public IActionResult GetUsers()
         {
-            return Ok(_userService.GetUsers());
+            try
+            {
+                return Ok(_userService.GetUsers());
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
         }
 
-        
-        [HttpGet("GetUser")]
-        public IActionResult GetIndividualList(Guid id)
+        [HttpGet("GetSingleUser")]
+        public IActionResult GetSingleUser()
         {
-            return Ok(_userService.GetIndividualUser(id));
+            try
+            {
+                Guid userId = Guid.Parse(CurrentRecord.Id["UserId"]);
+                return Ok(_userService.GetSingleUser(userId));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPut("EditProfile")]
-        public IActionResult EditProfile(Guid id, string? username, string? email, string? password)
+        public IActionResult EditProfile()
         {
-            return Ok(_userService.EditProfile(id, username, email, password));
+            try
+            {
+                var user = Request.ReadFromJsonAsync<UserDto>().Result;
+                Guid userId = Guid.Parse(CurrentRecord.Id["UserId"]);
+                return Ok(_userService.EditProfile(userId, user));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }    
         }
 
         [HttpPut("PromoteUser")]
-        public IActionResult PromteUser(Guid userId, Access access)
+        public IActionResult PromoteUser()
         {
-            return Ok(_userService.PromoteUser(userId, access));
+            try
+            {
+                var user = Request.ReadFromJsonAsync<UserDto>().Result;
+                return Ok(_userService.PromoteUser(user));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            
         }
 
         [HttpPut("DemoteUser")]
-        public IActionResult DemoteUser(Guid userId, Access access)
+        public IActionResult DemoteUser()
         {
-            return Ok(_userService.DemoteUser(userId, access));
+            try
+            {
+                var user = Request.ReadFromJsonAsync<UserDto>().Result;
+                return Ok(_userService.DemoteUser(user));
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
         }
 
         [HttpDelete("DeleteUser")]
-        public IActionResult DeleteUser(Guid? id)
+        public IActionResult DeleteUser()
         {
-            if(id == null)
+            try
             {
-                id = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+                Guid userId = Guid.Parse(CurrentRecord.Id["UserId"]);
+                return Ok(_userService.DeleteUser(userId));
             }
-            
-            _userService.DeleteUser(id);
-            return Ok();
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
+        //[HttpDelete("DeleteUser")]
+        //public IActionResult DeleteUser(Guid? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        id = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+        //    }
+
+        //    _userService.DeleteUser(id);
+        //    return Ok();
+        //}
+
+        //[AllowAnonymous]
+        //[HttpPost("CreateUser")]
+        //public IActionResult CreateUser(string username, string email, string password, Access? access)
+        //{
+        //    return Ok(_userService.CreateUser(username, email, password, access));
+        //}
     }
 }
