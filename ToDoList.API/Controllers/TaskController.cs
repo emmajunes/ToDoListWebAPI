@@ -28,10 +28,8 @@ namespace ToDoList.API.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest();
-            }
-            
+            }          
         }
 
         [HttpGet("GetAllTasks")]
@@ -40,11 +38,9 @@ namespace ToDoList.API.Controllers
             try
             {
                 return Ok(_taskService.GetTasks());
-
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
         }
@@ -72,7 +68,6 @@ namespace ToDoList.API.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }        
         }
@@ -98,7 +93,6 @@ namespace ToDoList.API.Controllers
             {
                 var task = Request.ReadFromJsonAsync<TaskDto>().Result;
                 return Ok(_taskService.ToggleTask(task));
-
             }
             catch (Exception)
             {
@@ -111,20 +105,14 @@ namespace ToDoList.API.Controllers
         {
             try
             {
-                //var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-
                 var list = Request.ReadFromJsonAsync<ToDoListDto>().Result;
                 _taskService.ChangeSortTypeForTask(list);
-
                 return Ok(_taskService.SortTasks(list));
             }
             catch (Exception)
             {
-
                 return BadRequest();
-            }
-           
+            }         
         }
-
     }
 }

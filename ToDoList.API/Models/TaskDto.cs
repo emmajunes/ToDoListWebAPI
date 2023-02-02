@@ -11,7 +11,6 @@ namespace ToDoList.API.Models
         public Guid Id { get; set; }
         public Priority TaskPrio { get; set; }
         public string TaskTitle { get; set; }
-
         public string TaskDescription { get; set; }
         public bool Completed { get; set; }
 

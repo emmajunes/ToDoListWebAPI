@@ -14,7 +14,6 @@ namespace ToDoList.API.Models
         public string ListTitle { get; set; }
         public ICollection<TaskDto> Tasks { get; set; }
         public Color TitleColor { get; set; }
-
         public SortTask Sortby { get; set; } = SortTask.Priority;
 
         [ForeignKey("UserDtoId")]

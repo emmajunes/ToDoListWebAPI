@@ -21,14 +21,6 @@ namespace ToDoList.API.Controllers
             _userService = userService;
         }
 
-        //[HttpPost("CreateList")]
-        //public IActionResult CreateList(string title, Color color)
-        //{
-        //    var identity = HttpContext.User.Identity;
-        //    var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-        //    return Ok(_listService.CreateList(title, color,identity, userId));
-        //}
-
         [HttpPost("CreateList")]
         public IActionResult CreateList()
         {
@@ -53,29 +45,16 @@ namespace ToDoList.API.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest();
-            }
-            
+            }           
         }
 
-        //[HttpGet("GetCurrentUserLists")]
-        //public IActionResult GetCurrentUserLists()
-        //{
-        //    var identity = HttpContext.User.Identity;
-        //    var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-     
-        //    return Ok(_listService.GetCurrentUserLists(identity, userId));
-        //}
         [HttpGet("GetCurrentUserLists")]
         public IActionResult GetCurrentUserLists()
         {
-            //var identity = HttpContext.User.Identity;
-            //var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
             try
             {
                 Guid userId = Guid.Parse(CurrentRecord.Id["UserId"]);
-                //var user = Request.ReadFromJsonAsync<UserDto>().Result;
                 return Ok(_listService.GetCurrentUserLists(userId));
             }
             catch (Exception)
@@ -94,18 +73,9 @@ namespace ToDoList.API.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest();
-            }
-            
+            }         
         }
-
-        //[HttpDelete("DeleteList")]
-        //public IActionResult Delete(Guid? id)
-        //{
-        //    _listService.DeleteList(id);
-        //    return Ok();
-        //}
 
         [HttpDelete("DeleteList")]
         public IActionResult Delete()
@@ -116,10 +86,8 @@ namespace ToDoList.API.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest();
-            }
-            
+            }          
         }
 
         [HttpPut("EditList")]
@@ -132,10 +100,8 @@ namespace ToDoList.API.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest();
-            }
-            
+            }         
         }
 
         [HttpPut("EditTitleColor")]
@@ -145,11 +111,9 @@ namespace ToDoList.API.Controllers
             {
                 var list = Request.ReadFromJsonAsync<ToDoListDto>().Result;
                 return Ok(_listService.EditTitleColor(list));
-
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
         }
@@ -160,16 +124,13 @@ namespace ToDoList.API.Controllers
             try
             {
                 var user = Request.ReadFromJsonAsync<UserDto>().Result;
-                //var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
                 _userService.ChangeSortType(user);
-
                 return Ok(_listService.SortLists(user));
             }
             catch (Exception)
             {
                 return BadRequest();
-            }
-            
+            }        
         }
     }
 }

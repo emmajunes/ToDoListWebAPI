@@ -15,7 +15,7 @@ namespace ToDoList.API.Services
             _dbContext = dbContext;
         }
 
-        public ToDoListDto AddTask(TaskDto taskItem)
+        public ToDoListDto AddTask(TaskDto task)
         {
             var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
 
@@ -23,9 +23,9 @@ namespace ToDoList.API.Services
             {
                 Id = Guid.NewGuid(),
                 ToDoListDtoId = listId,
-                TaskTitle = taskItem.TaskTitle,
-                TaskDescription = taskItem.TaskDescription,
-                TaskPrio = taskItem.TaskPrio,
+                TaskTitle = task.TaskTitle,
+                TaskDescription = task.TaskDescription,
+                TaskPrio = task.TaskPrio,
                 Completed = false,
             };
 
@@ -68,25 +68,23 @@ namespace ToDoList.API.Services
             selectedTask.TaskTitle = task.TaskTitle == null ? selectedTask.TaskTitle : task.TaskTitle;
             selectedTask.TaskDescription = task.TaskDescription == null ? selectedTask.TaskDescription : task.TaskDescription;
             selectedTask.TaskPrio = task.TaskPrio;
-
             _dbContext.SaveChanges();
+
             return selectedTask;
         }
 
         public TaskDto ToggleTask(TaskDto task)
         {
-            //var taskId = Guid.Parse(CurrentRecord.Id["TaskId"]);
             var selectedTask = _dbContext.Tasks.FirstOrDefault(x => x.Id == task.Id);
             selectedTask.Completed =! selectedTask.Completed;
-
             _dbContext.SaveChanges();
+
             return selectedTask;
         }
 
         public void ChangeSortTypeForTask(ToDoListDto list)
         {
             var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
-
             var currentList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
             currentList.Sortby = list.Sortby;
             _dbContext.SaveChanges();

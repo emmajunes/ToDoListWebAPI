@@ -14,33 +14,14 @@ namespace ToDoList.API.Services
             _dbContext = dbContext;
         }
 
-        //public ToDoListDto CreateList(string title, Color color, System.Security.Principal.IIdentity identity, string userId)
-        //{
-        //    var newList = new ToDoListDto()
-        //    {
-        //        ListDateTime = DateTime.Now.ToString(),
-        //        Id = Guid.NewGuid(),
-        //        ListTitle = title,
-        //        TitleColor = color,
-        //        Tasks = new List<TaskDto>(),
-        //        UserDtoId = Guid.Parse(userId)
-        //    };
-
-        //    _dbContext.ToDoList.Add(newList);
-        //    _dbContext.SaveChanges();
-
-        //    return newList;
-
-        //}
-
-        public ToDoListDto CreateList(ToDoListDto toDoList, Guid userId)
+        public ToDoListDto CreateList(ToDoListDto list, Guid userId)
         {
             var newList = new ToDoListDto()
             {
                 ListDateTime = DateTime.Now.ToString(),
                 Id = Guid.NewGuid(),
-                ListTitle = toDoList.ListTitle,
-                TitleColor = toDoList.TitleColor,
+                ListTitle = list.ListTitle,
+                TitleColor = list.TitleColor,
                 Tasks = new List<TaskDto>(),
                 UserDtoId = userId
             };
@@ -49,7 +30,6 @@ namespace ToDoList.API.Services
             _dbContext.SaveChanges();
 
             return newList;
-
         }
 
         public IEnumerable<ToDoListDto> GetLists()
@@ -57,21 +37,17 @@ namespace ToDoList.API.Services
             return _dbContext.ToDoList.ToList();
         }
 
-        public ToDoListDto GetSingleList(Guid id)
+        public ToDoListDto GetSingleList(Guid listId)
         {
-            CurrentRecord.Id["ListId"] = id.ToString();
-
-            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
+            CurrentRecord.Id["ListId"] = listId.ToString();
+            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
 
             return selectedList;
         }
         public IEnumerable<ToDoListDto> GetCurrentUserLists(Guid userId)
-        {
-            //var user = _dbContext.User.FirstOrDefault(x => x.Id == Guid.Parse(CurrentRecord.Id["UserId"]));
-            //var lists = GetLists();
-            //var currentUserLists = lists.Where(x => x.UserDtoId == userId);
+        {       
             var currentUser = _dbContext.User.FirstOrDefault(x => x.Id == userId);
-            var sortedList = SortLists(currentUser); //funkar ej sorterat just nu
+            var sortedList = SortLists(currentUser); 
 
             return sortedList;
         }
@@ -80,46 +56,25 @@ namespace ToDoList.API.Services
         {
             var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
             var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
-
             selectedList.TitleColor = list.TitleColor;
-
             _dbContext.SaveChanges();
 
             return selectedList;
         }
-
-        //public void DeleteList(Guid? id)
-        //{
-        //    if(id == null)
-        //    {
-        //        id = Guid.Parse(CurrentRecord.Id["ListId"]);
-        //    }
-
-        //    var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
-        //    _dbContext.ToDoList.Remove(selectedList);
-        //    _dbContext.SaveChanges();
-
-        //}
-
         public ToDoListDto DeleteList()
         {
-            var id = Guid.Parse(CurrentRecord.Id["ListId"]);
-            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == id);
+            var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
+            var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
             _dbContext.ToDoList.Remove(selectedList);
             _dbContext.SaveChanges();
 
             return selectedList;
         }
-
         public ToDoListDto EditList(ToDoListDto list)
         {
             var listId = Guid.Parse(CurrentRecord.Id["ListId"]);
-
             var selectedList = _dbContext.ToDoList.FirstOrDefault(x => x.Id == listId);
-
             selectedList.ListTitle = list.ListTitle == null ? selectedList.ListTitle : list.ListTitle;
-            //selectedList.ListTitle = list.ListTitle;
-
             _dbContext.SaveChanges();
 
             return selectedList;

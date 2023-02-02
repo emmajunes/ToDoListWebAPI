@@ -13,41 +13,10 @@ namespace ToDoList.API.Services
         {
             _dbContext = dbContext;
         }
-
-        //skapa errorhantering
-        //validering epost, password
-        //identity?
-        //vad ska admin ha tillgång till osv?
-
-        //public UserDto CreateUser(string username, string email, string password, Access? access)
-        //{
-        //    if(access == null)
-        //    {
-        //        access = Access.User;
-        //    }
-
-        //    var newUser = new UserDto()
-        //    {
-        //        Username = username,
-        //        Email = email,
-        //        Password = password,
-        //        Access = (Access)access,
-        //    };
-
-        //    _dbContext.User.Add(newUser);
-        //    _dbContext.SaveChanges();
-        //    return newUser;
-
-        //}
-
+ 
         public UserDto CreateUser(UserDto user)
-        {
-            //if (access == null)
-            //{
-            //    access = Access.User;
-            //}
-         
-            if(_dbContext.User.Any(x => x.Username == user.Username))
+        {       
+            if(_dbContext.User.Any(x => x.Username == user.Username)) //göra en för mail?
             {
                 throw new Exception();
             }
@@ -63,8 +32,16 @@ namespace ToDoList.API.Services
 
             _dbContext.User.Add(newUser);
             _dbContext.SaveChanges();
-            return newUser;
 
+            return newUser;
+        }
+        public UserDto LogOut()
+        {
+            var loggedOutUser = new UserDto();
+            CurrentRecord.Id["UserId"] = "";
+            CurrentRecord.Id["UserId"] = loggedOutUser.Id.ToString();
+
+            return loggedOutUser;
         }
 
         public UserDto Login(UserDto user)
@@ -97,19 +74,16 @@ namespace ToDoList.API.Services
             {
                 return null;
             }
-
         }
 
         public IEnumerable<UserDto> GetUsers()
         {
             return _dbContext.User.ToList();
-
         }
 
         public UserDto GetSingleUser(Guid id)
         {
             var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == id);
-
             return selectedUser;
         }
 
@@ -127,7 +101,6 @@ namespace ToDoList.API.Services
             selectedUser.Username = user.Username == null ? selectedUser.Username : user.Username;
             selectedUser.Email = user.Email == null ? selectedUser.Email : user.Email;
             selectedUser.Password = user.Password == null ? selectedUser.Password : user.Password;
-
             _dbContext.SaveChanges();
 
             return selectedUser;
@@ -135,6 +108,14 @@ namespace ToDoList.API.Services
         public UserDto DeleteUser(Guid? id)
         {
             var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == id);
+            _dbContext.User.Remove(selectedUser);
+            _dbContext.SaveChanges();
+
+            return selectedUser;
+        }
+        public UserDto DeleteUserForAdmin(UserDto user)
+        {
+            var selectedUser = _dbContext.User.FirstOrDefault(x => x.Id == user.Id);
             _dbContext.User.Remove(selectedUser);
             _dbContext.SaveChanges();
 
@@ -149,9 +130,9 @@ namespace ToDoList.API.Services
             {
                 throw new Exception();
             }
-            selectedUser.Access +=1;
-            
+            selectedUser.Access +=1;          
             _dbContext.SaveChanges();
+
             return selectedUser;
         }
 
@@ -164,74 +145,9 @@ namespace ToDoList.API.Services
                 throw new Exception();
             }
             selectedUser.Access -= 1;
-
             _dbContext.SaveChanges();
+
             return selectedUser;
         }
-
-        public bool ValidateEmail(string email)
-        {
-            if (String.IsNullOrWhiteSpace(email))
-            {
-                return false;
-            }
-            //foreach (var user in Users)
-            //{
-            //    if (user.Email == email)
-            //    {
-            //        Console.WriteLine("\nEmail already exists!");
-            //        return false;
-            //    }
-            //}
-
-            try
-            {
-                MailAddress m = new MailAddress(email);
-
-                return true;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
-        }
-
-        //public bool ValidatePassword(string password)
-        //{
-        //    int validConditions = 0;
-        //    foreach (char c in password)
-        //    {
-        //        if (c >= 'a' && c <= 'z')
-        //        {
-        //            validConditions++;
-        //            break;
-        //        }
-        //    }
-        //    foreach (char c in password)
-        //    {
-        //        if (c >= 'A' && c <= 'Z')
-        //        {
-        //            validConditions++;
-        //            break;
-        //        }
-        //    }
-        //    if (validConditions == 0) return false;
-        //    foreach (char c in password)
-        //    {
-        //        if (c >= '0' && c <= '9')
-        //        {
-        //            validConditions++;
-        //            break;
-        //        }
-        //    }
-        //    if (validConditions == 1) return false;
-        //    if (validConditions == 2)
-        //    {
-        //        char[] special = { '@', '#', '$', '%', '^', '&', '+', '=', '!', '/', '?', '*', '-', '[', ']', '"', '(', ')', '{', '}', '~', '¤', '´' };
-        //        if (password.IndexOfAny(special) == -1) return false;
-        //    }
-        //    return true;
-        //}
-
     }
 }

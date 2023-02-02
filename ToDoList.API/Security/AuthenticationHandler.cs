@@ -24,7 +24,6 @@ namespace ToDoList.API.Security
         {
             _userService = userService;
         }
-
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             var path = Request.Path.ToString();

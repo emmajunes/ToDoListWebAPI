@@ -11,9 +11,7 @@ namespace ToDoList.API.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public Access Access { get; set; }
-
         public SortList SortBy { get; set; } = SortList.Ascendning;
-
         public ICollection<ToDoListDto> ToDoList { get; set; }
 
         public UserDto()

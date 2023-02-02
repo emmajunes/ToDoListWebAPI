@@ -9,6 +9,8 @@ using ToDoList.API.Services;
 
 namespace ToDoList.API.Security
 {
+    //tidigare version som inte riktigt funkade hela vägen
+
     //public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     //{
     //    private readonly IUserService _userService;

@@ -40,7 +40,20 @@ namespace ToDoList.API.Controllers
             {
                 return BadRequest("Something went wrong with creating the token");
             }
-        }    
+        }
+
+        [HttpGet("Logout")]
+        public IActionResult LogOut()
+        {
+            try
+            {
+                return Ok(_userService.LogOut());
+            }
+            catch (Exception)
+            {
+                return BadRequest("Something went wrong with logging out");
+            }
+        }
 
         [AllowAnonymous]
         [HttpPost("CreateUser")]
@@ -66,7 +79,6 @@ namespace ToDoList.API.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
         }
@@ -111,8 +123,7 @@ namespace ToDoList.API.Controllers
             catch (Exception)
             {
                 return BadRequest();
-            }
-            
+            }         
         }
 
         [HttpPut("DemoteUser")]
@@ -125,7 +136,6 @@ namespace ToDoList.API.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
         }
@@ -143,23 +153,19 @@ namespace ToDoList.API.Controllers
                 return BadRequest();
             }
         }
-        //[HttpDelete("DeleteUser")]
-        //public IActionResult DeleteUser(Guid? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        id = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-        //    }
 
-        //    _userService.DeleteUser(id);
-        //    return Ok();
-        //}
-
-        //[AllowAnonymous]
-        //[HttpPost("CreateUser")]
-        //public IActionResult CreateUser(string username, string email, string password, Access? access)
-        //{
-        //    return Ok(_userService.CreateUser(username, email, password, access));
-        //}
+        [HttpPut("DeleteUserForAdmin")]
+        public IActionResult DeleteUserForAdmin()
+        {
+            try
+            {
+                var user = Request.ReadFromJsonAsync<UserDto>().Result;
+                return Ok(_userService.DeleteUserForAdmin(user));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
     }
 }
