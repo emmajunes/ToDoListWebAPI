@@ -47,7 +47,9 @@ namespace ToDoList.API.Services
         public TaskDto GetSingleTask(Guid taskId)
         {
             CurrentRecord.Id["TaskId"] = taskId.ToString();
-            return _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
+            var singleTask = _dbContext.Tasks.FirstOrDefault(x => x.Id == taskId);
+
+            return singleTask;
         }
 
         public TaskDto DeleteTask()

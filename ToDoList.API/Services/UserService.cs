@@ -16,7 +16,7 @@ namespace ToDoList.API.Services
  
         public UserDto CreateUser(UserDto user)
         {       
-            if(_dbContext.User.Any(x => x.Username == user.Username)) //göra en för mail?
+            if(_dbContext.User.Any(x => x.Username == user.Username))
             {
                 throw new Exception();
             }

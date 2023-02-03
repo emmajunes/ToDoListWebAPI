@@ -80,7 +80,6 @@ namespace ToDoList.API.Services
             return selectedList;
 
         }
-
         public IEnumerable<ToDoListDto> SortLists(UserDto user)
         {
             var lists = _dbContext.ToDoList.ToList();

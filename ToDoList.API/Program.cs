@@ -35,7 +35,7 @@ namespace ToDoList.API
                     Name = "Authorizations",
                     Type = SecuritySchemeType.Http,
                     BearerFormat = "JWT",
-                    Scheme = "bearer" // ändra till Bearer för att få token authorization
+                    Scheme = "bearer"
                 });
 
                 option.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -56,34 +56,6 @@ namespace ToDoList.API
 
             builder.Services.AddAuthentication("Bearer")
                 .AddScheme<AuthenticationSchemeOptions, AuthenticationHandler>("Bearer", null);
-            //builder.Services.AddSwaggerGen(options =>
-            //{
-            //    options.AddSecurityDefinition("basic", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            //    {
-            //        Name = "Authorization",
-            //        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
-            //        Scheme = "basic",
-            //        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-            //        Description = "Lägg till en autentiseringstoken i headern för att logga in med basic auth",
-            //    });
-
-            //    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            //    {
-            //        {
-            //            new OpenApiSecurityScheme
-            //            {
-            //                Reference = new OpenApiReference
-            //                {
-            //                    Type = ReferenceType.SecurityScheme,
-            //                    Id = "basic"
-            //                }
-            //            }, new string[] {}
-            //        }
-            //    });
-            //});
-
-            //builder.Services.AddAuthentication("BasicAuthentication")
-            //    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
             builder.Services.AddScoped<IListService, ListService>();
             builder.Services.AddScoped<ITaskService, TaskService>();
